@@ -1,0 +1,79 @@
+/* ============================= */
+/* LOGIN PAGE */
+/* ============================= */
+
+body {
+    background: #f4f6f9;
+}
+
+/* Container utama */
+.auth-bg {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 48px 24px;
+}
+
+/* Card wrapper */
+.auth-wrapper {
+    width: 100%;
+    max-width: 1100px;
+    min-height: 600px;
+    background: #ffffff;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+    display: flex;
+}
+
+/* Kiri - Form */
+.auth-left {
+    width: 45%;
+    padding: 56px 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Form container */
+.auth-form {
+    width: 100%;
+    max-width: 380px;
+}
+
+/* Kanan - Background */
+.auth-right {
+    width: 55%;
+    background: url('/admin-dashbyte/dist/assets/img/bg-dpr.jpg')
+                no-repeat center center;
+    background-size: cover;
+    position: relative;
+}
+
+/* Overlay effect */
+.auth-right::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: rgba(255,255,255,0.75);
+    backdrop-filter: grayscale(100%) brightness(1.05);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+
+    .auth-wrapper {
+        flex-direction: column;
+        min-height: auto;
+    }
+
+    .auth-right {
+        display: none;
+    }
+
+    .auth-left {
+        width: 100%;
+        padding: 40px 24px;
+    }
+}
