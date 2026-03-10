@@ -46,7 +46,6 @@
             display: flex;
         }
 
-        /* KIRI - LOGIN */
         .auth-left {
             width: 45%;
             padding: 56px 48px;
@@ -55,7 +54,6 @@
             justify-content: center;
         }
 
-        /* KANAN - BACKGROUND */
         .auth-right {
             width: 55%;
             background: url('{{ asset('admin-dashbyte/dist/assets/img/bg-dpr.jpg') }}')
@@ -72,7 +70,6 @@
             backdrop-filter: grayscale(100%) brightness(1.05);
         }
 
-        /* RESPONSIVE */
         @media (max-width: 768px) {
             .auth-wrapper {
                 flex-direction: column;
@@ -95,7 +92,7 @@
 <div class="auth-bg">
     <div class="auth-wrapper">
 
-        <!-- KIRI : LOGIN -->
+        <!-- KIRI -->
         <div class="auth-left">
             <div class="w-100" style="max-width: 380px;">
 
@@ -114,19 +111,22 @@
                 <form method="POST" action="{{ route('login') }}">
                     @csrf
 
+                    {{-- USERNAME --}}
                     <div class="mb-3">
                         <label class="form-label">Username</label>
                         <input type="text"
-                               name="pengguna"
-                               value="{{ old('pengguna') }}"
-                               class="form-control @error('pengguna') is-invalid @enderror"
+                               name="username"
+                               value="{{ old('username') }}"
+                               class="form-control @error('username') is-invalid @enderror"
                                placeholder="Masukkan Username"
                                required autofocus>
-                        @error('pengguna')
-                            <span class="invalid-feedback">{{ $message }}</span>
+
+                        @error('username')
+                            <span class="invalid-feedback d-block">{{ $message }}</span>
                         @enderror
                     </div>
 
+                    {{-- PASSWORD --}}
                     <div class="mb-4">
                         <label class="form-label d-flex justify-content-between">
                             Kata Sandi
@@ -137,13 +137,22 @@
                             </a>
                         </label>
 
-                        <input type="password"
-                               name="password"
-                               class="form-control @error('password') is-invalid @enderror"
-                               placeholder="Masukkan Kata Sandi"
-                               required>
+                        <div class="position-relative">
+                            <input type="password"
+                                   name="password"
+                                   id="password"
+                                   class="form-control pe-5 @error('password') is-invalid @enderror"
+                                   placeholder="Masukkan Kata Sandi"
+                                   required>
+
+                            <i class="ri-eye-line position-absolute"
+                               id="togglePassword"
+                               style="top: 50%; right: 15px; transform: translateY(-50%); cursor: pointer; font-size:18px;">
+                            </i>
+                        </div>
+
                         @error('password')
-                            <span class="invalid-feedback">{{ $message }}</span>
+                            <span class="invalid-feedback d-block">{{ $message }}</span>
                         @enderror
                     </div>
 
@@ -151,17 +160,37 @@
                             class="btn btn-primary w-100">
                         Masuk
                     </button>
+
                 </form>
 
             </div>
         </div>
 
-        <!-- KANAN : BACKGROUND -->
+        <!-- KANAN -->
         <div class="auth-right"></div>
 
     </div>
 </div>
 
 <script src="{{ asset('admin-dashbyte/dist/lib/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
+
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+    const togglePassword = document.getElementById('togglePassword');
+    const password = document.getElementById('password');
+
+    togglePassword.addEventListener('click', function () {
+
+        const type = password.getAttribute('type') === 'password' ? 'text' : 'password';
+        password.setAttribute('type', type);
+
+        this.classList.toggle('ri-eye-line');
+        this.classList.toggle('ri-eye-off-line');
+    });
+
+});
+</script>
+
 </body>
 </html>

@@ -47,22 +47,6 @@
 
                 <hr>
 
-                <!-- SIDEBAR SKIN -->
-                <label class="fw-semibold small">Sidebar Skin</label>
-                <div class="d-flex flex-column gap-2 mt-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-sidebar="default">
-                        Default
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-sidebar="prime">
-                        Prime
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary" data-sidebar="dark">
-                        Dark
-                    </button>
-                </div>
-
-                <hr>
-
                 <!-- ZOOM -->
                 <label class="fw-semibold small">Ukuran Website</label>
                 <div class="d-flex gap-2 mt-2">
@@ -132,11 +116,12 @@
                         Pengaturan Privasi
                     </a>
 
-                    <a href="#" class="list-group-item list-group-item-action">
+                    <a href="{{ route('pengaturan.akun') }}" 
+                    class="list-group-item list-group-item-action">
                         <i class="ri-user-settings-line me-2"></i>
                         Pengaturan Akun
                     </a>
-
+                    
                     <div class="dropdown-divider"></div>
 
                     <form action="{{ route('logout') }}" method="POST">

@@ -4,59 +4,74 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Http\RedirectResponse;
 
 class LoginController extends Controller
 {
+    /**
+     * Tampilkan halaman login
+     */
     public function showLoginForm()
     {
         return view('auth.login');
     }
 
+    /**
+     * Proses login (User & Pegawai)
+     */
     public function login(Request $request): RedirectResponse
     {
         // Validasi input
-        $credentials = $request->validate([
-            'pengguna' => 'required',
-            'password' => 'required',
+        $request->validate([
+            'username' => 'required|string',
+            'password' => 'required|string',
         ]);
 
-        // Coba login
-        if (Auth::attempt($credentials)) {
+        $credentials = $request->only('username', 'password');
 
-            // Regenerate session (WAJIB untuk keamanan)
+        /**
+         * 🔹 1. Coba login sebagai ADMIN (users)
+         */
+        if (Auth::guard('web')->attempt($credentials)) {
+
             $request->session()->regenerate();
 
-            // Ambil user yang login
-            $akunLogin = Auth::user();
-
-            // Simpan data tambahan ke session
-            session([
-                'nama' => $akunLogin->nama,
-                'nip' => $akunLogin->nip ?? null,
-                'golongan' => $akunLogin->golongan ?? null,
-                'id_satker' => $akunLogin->id_satker ?? null,
-                'informal_photo_name' => $akunLogin->informal_photo_name ?? null,
-                'satker' => $akunLogin->nama_satker ?? null,
-            ]);
-
-            return redirect()->route('admin.index');
+            return redirect()->intended(route('admin.index'));
         }
 
-        // Jika gagal login
+        /**
+         * 🔹 2. Kalau gagal, coba login sebagai PEGAWAI
+         */
+        if (Auth::guard('pegawai')->attempt($credentials)) {
+
+            $request->session()->regenerate();
+
+            return redirect()->intended(route('pegawai.index'));
+        }
+
+        /**
+         * 🔹 Kalau dua-duanya gagal
+         */
         return back()->withErrors([
-            'pengguna' => 'Username atau password salah'
-        ])->onlyInput('pengguna');
+            'username' => 'Username atau password salah.',
+        ])->onlyInput('username');
     }
 
+    /**
+     * Logout (Auto detect guard)
+     */
     public function logout(Request $request): RedirectResponse
     {
-        Auth::logout();
+        if (Auth::guard('pegawai')->check()) {
+            Auth::guard('pegawai')->logout();
+        } elseif (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+        }
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect('/login');
+        return redirect()->route('login');
     }
 }

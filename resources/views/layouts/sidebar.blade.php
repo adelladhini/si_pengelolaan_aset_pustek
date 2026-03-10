@@ -30,6 +30,15 @@
             </a>
         </div>
 
+        <!-- ===== DATA SATKER ===== -->
+        <div class="nav-item mb-2">
+            <a href="{{ route('satker.index') }}"
+            class="nav-link d-flex align-items-center {{ request()->routeIs('satker.*') ? 'active' : '' }}">
+                <i class="ri-building-line me-2 fs-18"></i>
+                <span>Data Satker</span>
+            </a>
+        </div>
+
         <!-- ===== DATA ASET ===== -->
         <div class="nav-item mb-2">
             <a href="{{ route('aset.index') }}"

@@ -22,4 +22,4 @@ class AdminController extends Controller
             'asetBelumTerpakai'
         ));
     }
-}
+} 
