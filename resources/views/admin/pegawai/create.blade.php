@@ -53,14 +53,6 @@
                     <input type="date" name="tmt_pensiun" class="form-control">
                 </div>
 
-                <div class="mb-3">
-                    <label>Status</label>
-                    <select name="status_pegawai" class="form-select">
-                        <option value="1">Aktif</option>
-                        <option value="0">Nonaktif</option>
-                    </select>
-                </div>
-
                 <button class="btn btn-primary">Simpan</button>
                 <a href="{{ route('pegawai.index') }}" class="btn btn-secondary">Kembali</a>
 

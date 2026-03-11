@@ -56,17 +56,6 @@
             </a>
         </div>
 
-        <!-- ===== LOGOUT ===== -->
-        <div class="nav-item mt-3">
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit"
-                        class="nav-link border-0 bg-transparent w-100 text-start d-flex align-items-center text-danger">
-                    <i class="ri-logout-box-line me-2 fs-18"></i>
-                    <span>Logout</span>
-                </button>
-            </form>
-        </div>
 
     </div>
 

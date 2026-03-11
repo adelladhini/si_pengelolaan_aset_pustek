@@ -269,6 +269,65 @@
             border: 1px solid #e2e8f0;
         }
 
+/* ======================================================
+   DARK MODE TABLE FIX
+====================================================== */
+
+body.dark-mode .table {
+    color: #e2e8f0;
+}
+
+body.dark-mode .table thead th {
+    background-color: #1f2937;
+    color: #f1f5f9;
+    border-color: #374151;
+}
+
+body.dark-mode .table tbody tr {
+    background-color: #1e293b;
+}
+
+body.dark-mode .table tbody tr:nth-child(even) {
+    background-color: #223047;
+}
+
+body.dark-mode .table tbody tr:hover {
+    background-color: #2b3a55;
+}
+
+body.dark-mode .table td,
+body.dark-mode .table th {
+    border-color: #374151;
+}
+
+body.dark-mode table {
+    background-color: #1f2a3c;
+    color: #ffffff;
+}
+
+body.dark-mode table thead {
+    background-color: #2c3e50;
+    color: #ffffff;
+}
+
+body.dark-mode table tbody tr {
+    background-color: #1f2a3c;
+}
+
+body.dark-mode table tbody tr:nth-child(even) {
+    background-color: #243247;
+}
+
+body.dark-mode table tbody tr:hover {
+    background-color: #2e3f57;
+}
+
+body.dark-mode table th,
+body.dark-mode table td {
+    border-color: #3a4a61;
+}
+
+
     </style>
 </head>
 

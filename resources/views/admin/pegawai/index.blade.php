@@ -11,36 +11,41 @@
         </a>
     </div>
 
-    <!-- FILTER -->
-    <div class="card mb-3">
-        <div class="card-body">
-            <form method="GET" action="{{ route('pegawai.index') }}">
-                <div class="row">
+<!-- FILTER -->
+<div class="card mb-3">
+    <div class="card-body">
 
-                    <!-- Search -->
-<div class="input-group" style="max-width: 400px;">
-    
-    <!-- Icon Search -->
-    <span class="input-group-text bg-white">
-        <i class="bi bi-search"></i>
-    </span>
+        <form method="GET" action="{{ route('pegawai.index') }}">
+            <div class="row align-items-center">
 
-    <!-- Input -->
-    <input type="text" 
-           name="search" 
-           id="searchInput"
-           class="form-control border-start-0 border-end-0" 
-           placeholder="Cari NIP / Nama...">
+                <!-- SEARCH -->
+                <div class="col-md-4">
+                    <div class="input-group">
 
-    <!-- Tombol Clear -->
-    <button type="button" 
-            class="input-group-text bg-white border-start-0"
-            onclick="clearSearch()"
-            style="cursor:pointer;">
-        <i class="bi bi-x-lg"></i>
-    </button>
+                        <!-- ICON SEARCH -->
+                        <span class="input-group-text bg-white">
+                            <i class="bi bi-search"></i>
+                        </span>
 
-</div>
+                        <!-- INPUT -->
+                        <input type="text"
+                               name="search"
+                               id="searchInput"
+                               class="form-control"
+                               placeholder="Cari NIP / Nama..."
+                               onkeyup="toggleClearButton()">
+
+                        <!-- CLEAR -->
+                        <button type="button"
+                                id="clearBtn"
+                                class="input-group-text bg-white"
+                                onclick="clearSearch()"
+                                style="cursor:pointer; display:none;">
+                            <i class="bi bi-x-lg"></i>
+                        </button>
+
+                    </div>
+                </div>
 
                     <!-- Filter Satker -->
                     <div class="col-md-3">
@@ -64,6 +69,13 @@
             </form>
         </div>
     </div>
+
+    @if(session('success'))
+<div class="alert alert-success alert-dismissible fade show">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+</div>
+@endif
 
     <!-- TABLE -->
     <div class="card">
@@ -100,26 +112,28 @@
                             {!! $item->status_badge !!}
                         </td>
 
-                        <!-- AKSI -->
-                    <td class="text-center">
+<!-- AKSI -->
+<td class="text-center">
 
     <!-- EDIT -->
     <a href="{{ route('pegawai.edit', $item->id) }}"
-       class="btn btn-warning btn-sm">
-        Edit
+       class="btn btn-warning btn-sm"
+       title="Edit Pegawai">
+        <i class="bi bi-pencil"></i>
     </a>
 
-<!-- HAPUS DATA -->
-<form action="{{ route('pegawai.destroy', $item->id) }}"
-      method="POST"
-      class="d-inline">
-    @csrf
-    @method('DELETE')
-    <button class="btn btn-danger btn-sm"
-            onclick="return confirm('Yakin ingin menghapus pegawai ini? Data tidak bisa dikembalikan.')">
-        Hapus
-    </button>
-</form>
+    <!-- HAPUS -->
+    <form action="{{ route('pegawai.destroy', $item->id) }}"
+          method="POST"
+          class="d-inline">
+        @csrf
+        @method('DELETE')
+        <button class="btn btn-danger btn-sm"
+                title="Hapus Pegawai"
+                onclick="return confirm('Yakin ingin menghapus pegawai ini? Data tidak bisa dikembalikan.')">
+            <i class="bi bi-trash"></i>
+        </button>
+    </form>
 
     <!-- RESET PASSWORD -->
     <form action="{{ route('pegawai.reset', $item->id) }}"
@@ -127,8 +141,9 @@
           class="d-inline">
         @csrf
         <button class="btn btn-secondary btn-sm"
+                title="Reset Password"
                 onclick="return confirm('Reset password pegawai ini?')">
-            Reset PW
+            <i class="bi bi-key"></i>
         </button>
     </form>
 

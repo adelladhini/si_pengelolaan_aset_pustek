@@ -12,15 +12,18 @@ class Aset extends Model
     protected $table = 'aset';
 
     protected $fillable = [
-        'nama_tablet',
+        'kode_bmn',
+        'nama_aset',
         'serial_number',
         'imei',
+        'tahun_pengadaan',
         'kondisi',
         'status',
-        'pegawai_id'
+        'pegawai_id',
+        'keterangan'
     ];
 
-    // Relasi ke Pegawai (1 tablet milik 1 pegawai)
+    // Relasi ke Pegawai
     public function pegawai()
     {
         return $this->belongsTo(Pegawai::class);

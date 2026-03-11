@@ -12,9 +12,11 @@ return new class extends Migration
             $table->id();
 
             // Informasi dasar aset
+            $table->string('kode_bmn')->unique(); // kode inventaris BMN
             $table->string('nama_aset');
-            $table->string('serial_number')->unique();
-            $table->string('imei')->unique();
+            $table->string('serial_number')->nullable()->unique();
+            $table->string('imei')->nullable()->unique();
+            $table->year('tahun_pengadaan')->nullable(); // tahun pengadaan aset
 
             // Kondisi fisik
             $table->enum('kondisi', [

@@ -8,7 +8,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\AsetController;
 use App\Http\Controllers\PengaturanAkunController;
-use App\Http\Controllers\SatkerController; // TANPA Admin
+use App\Http\Controllers\SatkerController; 
 
 /*
 |--------------------------------------------------------------------------
