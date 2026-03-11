@@ -36,35 +36,35 @@
                                required>
                     </div>
 
-<div class="col-md-6 mb-3">
-    <label class="form-label">Serial Number</label>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Serial Number</label>
 
-    <input type="text"
-           name="serial_number"
-           class="form-control @error('serial_number') is-invalid @enderror"
-           value="{{ old('serial_number', $aset->serial_number) }}">
+                        <input type="text"
+                               name="serial_number"
+                               class="form-control @error('serial_number') is-invalid @enderror"
+                               value="{{ old('serial_number', $aset->serial_number) }}">
 
-    @error('serial_number')
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>
-    @enderror
-</div>
+                        @error('serial_number')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
 
-<div class="col-md-6 mb-3">
-    <label class="form-label">IMEI</label>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">IMEI</label>
 
-    <input type="text"
-           name="imei"
-           class="form-control @error('imei') is-invalid @enderror"
-           value="{{ old('imei', $aset->imei) }}">
+                        <input type="text"
+                               name="imei"
+                               class="form-control @error('imei') is-invalid @enderror"
+                               value="{{ old('imei', $aset->imei) }}">
 
-    @error('imei')
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>
-    @enderror
-</div>
+                        @error('imei')
+                            <div class="invalid-feedback">
+                                {{ $message }}
+                            </div>
+                        @enderror
+                    </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Tahun Pengadaan</label>
@@ -82,36 +82,32 @@
                             <option value="Rusak Ringan" {{ $aset->kondisi == 'Rusak Ringan' ? 'selected' : '' }}>Rusak Ringan</option>
                             <option value="Rusak Berat" {{ $aset->kondisi == 'Rusak Berat' ? 'selected' : '' }}>Rusak Berat</option>
                         </select>
-
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Status</label>
 
-                        <select name="status" class="form-select">
+                        <select name="status" id="status" class="form-select">
                             <option value="Tersedia" {{ $aset->status == 'Tersedia' ? 'selected' : '' }}>Tersedia</option>
                             <option value="Digunakan" {{ $aset->status == 'Digunakan' ? 'selected' : '' }}>Digunakan</option>
                             <option value="Perbaikan" {{ $aset->status == 'Perbaikan' ? 'selected' : '' }}>Perbaikan</option>
                         </select>
-
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Pegawai</label>
 
-                        <select name="pegawai_id" class="form-select">
-
+                        <select name="pegawai_id" id="pegawai" class="form-select">
                             <option value="">-- Pilih Pegawai --</option>
 
                             @foreach($pegawai as $p)
                                 <option value="{{ $p->id }}"
-                                {{ $aset->pegawai_id == $p->id ? 'selected' : '' }}>
+                                    {{ $aset->pegawai_id == $p->id ? 'selected' : '' }}>
                                     {{ $p->nama }}
                                 </option>
                             @endforeach
 
                         </select>
-
                     </div>
 
                     <div class="col-md-12 mb-3">
@@ -144,5 +140,36 @@
     </div>
 
 </div>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function () {
+
+    const statusSelect = document.getElementById('status');
+    const pegawaiSelect = document.getElementById('pegawai');
+
+    function togglePegawai() {
+
+        if(statusSelect.value === 'Tersedia'){
+
+            pegawaiSelect.disabled = true;
+            pegawaiSelect.value = '';
+
+        }else{
+
+            pegawaiSelect.disabled = false;
+
+        }
+
+    }
+
+    statusSelect.addEventListener('change', togglePegawai);
+
+    togglePegawai();
+
+});
+
+</script>
 
 @endsection

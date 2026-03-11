@@ -19,83 +19,89 @@
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Kode BMN</label>
-                        <input type="text" name="kode_bmn"
+                        <input type="text"
+                               name="kode_bmn"
                                class="form-control"
                                placeholder="Contoh: BMN001"
+                               value="{{ old('kode_bmn') }}"
                                required>
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Nama Aset</label>
-                        <input type="text" name="nama_aset"
+                        <input type="text"
+                               name="nama_aset"
                                class="form-control"
                                placeholder="Contoh: Tablet Samsung"
+                               value="{{ old('nama_aset') }}"
                                required>
                     </div>
 
-<div class="col-md-6 mb-3">
-    <label class="form-label">Serial Number</label>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Serial Number</label>
 
-    <input type="text"
-           name="serial_number"
-           class="form-control @error('serial_number') is-invalid @enderror"
-           value="{{ old('serial_number') }}">
+                        <input type="text"
+                               name="serial_number"
+                               class="form-control @error('serial_number') is-invalid @enderror"
+                               value="{{ old('serial_number') }}">
 
-    @error('serial_number')
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>
-    @enderror
-</div>
+                        @error('serial_number')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
 
-<div class="col-md-6 mb-3">
-    <label class="form-label">IMEI</label>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">IMEI</label>
 
-    <input type="text"
-           name="imei"
-           class="form-control @error('imei') is-invalid @enderror"
-           value="{{ old('imei') }}">
+                        <input type="text"
+                               name="imei"
+                               class="form-control @error('imei') is-invalid @enderror"
+                               value="{{ old('imei') }}">
 
-    @error('imei')
-        <div class="invalid-feedback">
-            {{ $message }}
-        </div>
-    @enderror
-</div>
+                        @error('imei')
+                        <div class="invalid-feedback">
+                            {{ $message }}
+                        </div>
+                        @enderror
+                    </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Tahun Pengadaan</label>
-                        <input type="number" name="tahun_pengadaan"
+                        <input type="number"
+                               name="tahun_pengadaan"
                                class="form-control"
-                               placeholder="2024">
+                               placeholder="2024"
+                               value="{{ old('tahun_pengadaan') }}">
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Kondisi</label>
-                        <select name="kondisi" class="form-select">
 
+                        <select name="kondisi" class="form-select">
                             <option value="Baik">Baik</option>
                             <option value="Rusak Ringan">Rusak Ringan</option>
                             <option value="Rusak Berat">Rusak Berat</option>
-
                         </select>
+
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Status</label>
-                        <select name="status" class="form-select">
 
+                        <select name="status" id="status" class="form-select">
                             <option value="Tersedia">Tersedia</option>
                             <option value="Digunakan">Digunakan</option>
                             <option value="Perbaikan">Perbaikan</option>
-
                         </select>
+
                     </div>
 
                     <div class="col-md-6 mb-3">
                         <label class="form-label">Pegawai Pengguna</label>
 
-                        <select name="pegawai_id" class="form-select">
+                        <select name="pegawai_id" id="pegawai" class="form-select">
 
                             <option value="">-- Pilih Pegawai --</option>
 
@@ -106,6 +112,7 @@
                             @endforeach
 
                         </select>
+
                     </div>
 
                     <div class="col-md-12 mb-3">
@@ -113,7 +120,7 @@
 
                         <textarea name="keterangan"
                                   class="form-control"
-                                  rows="3"></textarea>
+                                  rows="3">{{ old('keterangan') }}</textarea>
                     </div>
 
                 </div>
@@ -138,5 +145,36 @@
     </div>
 
 </div>
+
+
+<script>
+
+document.addEventListener("DOMContentLoaded", function(){
+
+    const statusSelect = document.getElementById('status');
+    const pegawaiSelect = document.getElementById('pegawai');
+
+    function togglePegawai(){
+
+        if(statusSelect.value === 'Tersedia'){
+
+            pegawaiSelect.disabled = true;
+            pegawaiSelect.value = '';
+
+        }else{
+
+            pegawaiSelect.disabled = false;
+
+        }
+
+    }
+
+    statusSelect.addEventListener('change', togglePegawai);
+
+    togglePegawai();
+
+});
+
+</script>
 
 @endsection
