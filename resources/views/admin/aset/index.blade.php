@@ -2,6 +2,36 @@
 
 @section('content')
 
+<style>
+
+/* FILTER BAR */
+.filter-bar{
+    background: #f8f9fa;
+    border-radius: 10px;
+}
+
+/* SEARCH */
+.filter-bar .form-control{
+    border-radius: 8px;
+}
+
+/* SELECT */
+.filter-bar .form-select{
+    border-radius: 8px;
+}
+
+/* BUTTON FILTER */
+.filter-bar .btn-success{
+    background: #1abc9c;
+    border: none;
+}
+
+.filter-bar .btn-success:hover{
+    background: #16a085;
+}
+
+</style>
+
 <div class="container-fluid">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -12,28 +42,32 @@
         </a>
     </div>
 
-<!-- SEARCH -->
-<div class="card mb-3">
+<!-- FILTER -->
+<div class="card mb-3 filter-bar">
     <div class="card-body">
 
         <form method="GET" action="{{ route('aset.index') }}">
-            <div class="row">
+            <div class="row align-items-center">
 
+                <!-- SEARCH -->
                 <div class="col-md-4">
                     <div class="input-group">
 
+                        <!-- ICON SEARCH -->
                         <span class="input-group-text bg-white">
                             <i class="bi bi-search"></i>
                         </span>
 
+                        <!-- INPUT -->
                         <input type="text"
                                name="search"
                                id="searchInput"
-                               value="{{ request('search') }}"
                                class="form-control"
-                               placeholder="Cari kode / nama aset..."
+                               placeholder="Cari Kode / Nama Aset..."
+                               value="{{ request('search') }}"
                                onkeyup="toggleClearButton()">
 
+                        <!-- CLEAR -->
                         <button type="button"
                                 id="clearBtn"
                                 class="input-group-text bg-white"
@@ -45,12 +79,27 @@
                     </div>
                 </div>
 
+                <!-- FILTER STATUS -->
+                <div class="col-md-3">
+                    <select name="status" class="form-select">
+                        <option value="">-- Semua Status --</option>
+                        <option value="Tersedia" {{ request('status') == 'Tersedia' ? 'selected' : '' }}>Tersedia</option>
+                        <option value="Digunakan" {{ request('status') == 'Digunakan' ? 'selected' : '' }}>Digunakan</option>
+                        <option value="Perbaikan" {{ request('status') == 'Perbaikan' ? 'selected' : '' }}>Perbaikan</option>
+                    </select>
+                </div>
+
+                <!-- BUTTON -->
+                <div class="col-md-3">
+                    <button class="btn btn-success btn-sm">Filter</button>
+                    <a href="{{ route('aset.index') }}" class="btn btn-secondary btn-sm">Reset</a>
+                </div>
+
             </div>
         </form>
 
     </div>
 </div>
-
 
 @if(session('success'))
 <div class="alert alert-success alert-dismissible fade show">

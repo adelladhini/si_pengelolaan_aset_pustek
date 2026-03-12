@@ -10,9 +10,16 @@ class SatkerController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $satker = Satker::orderBy('nama_satker', 'asc')->get();
+        $query = Satker::orderBy('nama_satker', 'asc');
+
+        // SEARCH
+        if ($request->search) {
+            $query->whereRaw('LOWER(nama_satker) like ?', ['%' . strtolower($request->search) . '%']);
+        }
+
+        $satker = $query->get();
 
         return view('admin.satker.index', compact('satker'));
     }

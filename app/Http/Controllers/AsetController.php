@@ -11,9 +11,24 @@ class AsetController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $aset = Aset::with('pegawai')->latest()->get();
+        $query = Aset::with('pegawai');
+
+        // SEARCH
+        if ($request->search) {
+            $query->where(function($q) use ($request){
+                $q->where('kode_bmn','like','%'.$request->search.'%')
+                  ->orWhere('nama_aset','like','%'.$request->search.'%');
+            });
+        }
+
+        // FILTER STATUS
+        if ($request->status) {
+            $query->where('status',$request->status);
+        }
+
+        $aset = $query->latest()->get();
 
         return view('admin.aset.index', compact('aset'));
     }
@@ -31,34 +46,33 @@ class AsetController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-public function store(Request $request)
-{
-    $request->validate([
-        'kode_bmn' => 'required',
-        'nama_aset' => 'required',
-        'serial_number' => 'nullable|unique:aset,serial_number',
-        'imei' => 'nullable|unique:aset,imei'
-    ],[
-        'serial_number.unique' => 'Serial Number sudah terdaftar.',
-        'imei.unique' => 'IMEI sudah terdaftar.'
-    ]);
+    public function store(Request $request)
+    {
+        $request->validate([
+            'kode_bmn' => 'required',
+            'nama_aset' => 'required',
+            'serial_number' => 'nullable|unique:aset,serial_number',
+            'imei' => 'nullable|unique:aset,imei'
+        ],[
+            'serial_number.unique' => 'Serial Number sudah terdaftar.',
+            'imei.unique' => 'IMEI sudah terdaftar.'
+        ]);
 
-    Aset::create([
-        'kode_bmn' => $request->kode_bmn,
-        'nama_aset' => $request->nama_aset,
-        'serial_number' => $request->serial_number,
-        'imei' => $request->imei,
-        'tahun_pengadaan' => $request->tahun_pengadaan,
-        'kondisi' => $request->kondisi,
-        'status' => $request->status,
-        'pegawai_id' => $request->pegawai_id,
-        'keterangan' => $request->keterangan,
-    ]);
+        Aset::create([
+            'kode_bmn' => $request->kode_bmn,
+            'nama_aset' => $request->nama_aset,
+            'serial_number' => $request->serial_number,
+            'imei' => $request->imei,
+            'tahun_pengadaan' => $request->tahun_pengadaan,
+            'kondisi' => $request->kondisi,
+            'status' => $request->status,
+            'pegawai_id' => $request->pegawai_id,
+            'keterangan' => $request->keterangan,
+        ]);
 
-    return redirect()->route('aset.index')
-        ->with('success','Data aset berhasil ditambahkan');
-}
-
+        return redirect()->route('aset.index')
+            ->with('success','Data aset berhasil ditambahkan');
+    }
 
     /**
      * Show the form for editing the specified resource.

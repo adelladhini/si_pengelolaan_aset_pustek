@@ -27,7 +27,7 @@
                         <input type="text"
                                name="nip"
                                class="form-control"
-                               value="{{ $pegawai->nip }}"
+                               value="{{ old('nip', $pegawai->nip) }}"
                                required>
                     </div>
 
@@ -37,7 +37,7 @@
                         <input type="text"
                                name="nama"
                                class="form-control"
-                               value="{{ $pegawai->nama }}"
+                               value="{{ old('nama', $pegawai->nama) }}"
                                required>
                     </div>
 
@@ -47,7 +47,7 @@
                         <input type="text"
                                name="jabatan"
                                class="form-control"
-                               value="{{ $pegawai->jabatan }}"
+                               value="{{ old('jabatan', $pegawai->jabatan) }}"
                                required>
                     </div>
 
@@ -58,7 +58,7 @@
 
                             @foreach($satker as $s)
                                 <option value="{{ $s->id }}"
-                                    {{ $pegawai->satker_id == $s->id ? 'selected' : '' }}>
+                                    {{ old('satker_id', $pegawai->satker_id) == $s->id ? 'selected' : '' }}>
                                     {{ $s->nama_satker }}
                                 </option>
                             @endforeach
@@ -72,7 +72,7 @@
                         <input type="date"
                                name="tmt_pensiun"
                                class="form-control"
-                               value="{{ $pegawai->tmt_pensiun }}">
+                               value="{{ old('tmt_pensiun', $pegawai->tmt_pensiun ? \Carbon\Carbon::parse($pegawai->tmt_pensiun)->format('Y-m-d') : '') }}">
                     </div>
 
                 </div>
