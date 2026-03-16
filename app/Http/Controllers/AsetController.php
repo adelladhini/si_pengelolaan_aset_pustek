@@ -4,119 +4,133 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Aset;
-use App\Models\Pegawai;
 
 class AsetController extends Controller
 {
+
     /**
-     * Display a listing of the resource.
+     * Tampilkan daftar aset
      */
     public function index(Request $request)
     {
-        $query = Aset::with('pegawai');
+        $query = Aset::query();
 
         // SEARCH
         if ($request->search) {
-            $query->where(function($q) use ($request){
-                $q->where('kode_bmn','like','%'.$request->search.'%')
-                  ->orWhere('nama_aset','like','%'.$request->search.'%');
+            $query->where(function ($q) use ($request) {
+                $q->where('kode_aset', 'like', '%' . $request->search . '%')
+                  ->orWhere('nama_aset', 'like', '%' . $request->search . '%');
             });
         }
 
         // FILTER STATUS
         if ($request->status) {
-            $query->where('status',$request->status);
+            $query->where('status', $request->status);
         }
 
-        $aset = $query->latest()->get();
+        $aset = $query->orderBy('kode_aset','asc')->paginate(10);
 
-        return view('admin.aset.index', compact('aset'));
+        return view('aset.index', compact('aset'));
     }
 
+
     /**
-     * Show the form for creating a new resource.
+     * Form tambah aset
      */
     public function create()
     {
-        $pegawai = Pegawai::all();
-
-        return view('admin.aset.create', compact('pegawai'));
+        return view('aset.create');
     }
 
+
     /**
-     * Store a newly created resource in storage.
+     * Simpan aset baru
      */
     public function store(Request $request)
     {
         $request->validate([
-            'kode_bmn' => 'required',
-            'nama_aset' => 'required',
-            'serial_number' => 'nullable|unique:aset,serial_number',
-            'imei' => 'nullable|unique:aset,imei'
+            'kode_aset' => 'required|unique:aset,kode_aset',
+            'nama_aset' => 'required|string|max:255',
+            'merk' => 'nullable|string|max:255',
+            'serial_number' => 'nullable|string|max:255|unique:aset,serial_number',
+            'imei' => 'nullable|string|max:255|unique:aset,imei',
+            'tahun_pengadaan' => 'nullable|numeric',
+            'kondisi' => 'required'
         ],[
-            'serial_number.unique' => 'Serial Number sudah terdaftar.',
-            'imei.unique' => 'IMEI sudah terdaftar.'
+            'kode_aset.unique' => '⚠️ Kode aset sudah digunakan.',
+            'serial_number.unique' => '⚠️ Serial Number sudah terdaftar.',
+            'imei.unique' => '⚠️ IMEI sudah terdaftar pada aset lain.'
         ]);
 
         Aset::create([
-            'kode_bmn' => $request->kode_bmn,
+            'kode_aset' => $request->kode_aset,
             'nama_aset' => $request->nama_aset,
+            'merk' => $request->merk,
             'serial_number' => $request->serial_number,
             'imei' => $request->imei,
             'tahun_pengadaan' => $request->tahun_pengadaan,
             'kondisi' => $request->kondisi,
-            'status' => $request->status,
-            'pegawai_id' => $request->pegawai_id,
-            'keterangan' => $request->keterangan,
+            'status' => 'Tersedia'
         ]);
 
         return redirect()->route('aset.index')
             ->with('success','Data aset berhasil ditambahkan');
     }
 
+
     /**
-     * Show the form for editing the specified resource.
+     * Form edit aset
      */
-    public function edit(string $id)
+    public function edit($id)
     {
         $aset = Aset::findOrFail($id);
-        $pegawai = Pegawai::all();
 
-        return view('admin.aset.edit', compact('aset','pegawai'));
+        return view('aset.edit', compact('aset'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        $request->validate([
-            'kode_bmn' => 'required',
-            'nama_aset' => 'required',
-        ]);
 
+    /**
+     * Update aset
+     */
+    public function update(Request $request, $id)
+    {
         $aset = Aset::findOrFail($id);
 
+        $request->validate([
+            'kode_aset' => 'required|unique:aset,kode_aset,' . $aset->id,
+            'nama_aset' => 'required|string|max:255',
+            'merk' => 'nullable|string|max:255',
+            'serial_number' => 'nullable|string|max:255|unique:aset,serial_number,' . $aset->id,
+            'imei' => 'nullable|string|max:255|unique:aset,imei,' . $aset->id,
+            'tahun_pengadaan' => 'nullable|numeric',
+            'kondisi' => 'required',
+            'status' => 'required'
+        ],[
+            'kode_aset.unique' => '⚠️ Kode aset sudah digunakan.',
+            'serial_number.unique' => '⚠️ Serial Number sudah terdaftar.',
+            'imei.unique' => '⚠️ IMEI sudah terdaftar pada aset lain.'
+        ]);
+
         $aset->update([
-            'kode_bmn' => $request->kode_bmn,
+            'kode_aset' => $request->kode_aset,
             'nama_aset' => $request->nama_aset,
+            'merk' => $request->merk,
             'serial_number' => $request->serial_number,
             'imei' => $request->imei,
             'tahun_pengadaan' => $request->tahun_pengadaan,
             'kondisi' => $request->kondisi,
-            'status' => $request->status,
-            'pegawai_id' => $request->pegawai_id,
-            'keterangan' => $request->keterangan,
+            'status' => $request->status
         ]);
 
         return redirect()->route('aset.index')
             ->with('success','Data aset berhasil diperbarui');
     }
 
+
     /**
-     * Remove the specified resource from storage.
+     * Hapus aset
      */
-    public function destroy(string $id)
+    public function destroy($id)
     {
         $aset = Aset::findOrFail($id);
 

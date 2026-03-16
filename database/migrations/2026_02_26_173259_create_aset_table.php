@@ -11,34 +11,27 @@ return new class extends Migration
         Schema::create('aset', function (Blueprint $table) {
             $table->id();
 
-            // Informasi dasar aset
-            $table->string('kode_bmn')->unique(); // kode inventaris BMN
+            $table->string('kode_aset')->unique();
             $table->string('nama_aset');
+
+            $table->string('merk')->nullable();
+
+            // Tambahan identitas perangkat
             $table->string('serial_number')->nullable()->unique();
             $table->string('imei')->nullable()->unique();
-            $table->year('tahun_pengadaan')->nullable(); // tahun pengadaan aset
 
-            // Kondisi fisik
+            $table->year('tahun_pengadaan')->nullable();
+
             $table->enum('kondisi', [
-                'Baik',
-                'Rusak Ringan',
-                'Rusak Berat'
-            ])->default('Baik');
+                'baik',
+                'rusak ringan',
+                'rusak berat'
+            ])->default('baik');
 
-            // Status penggunaan
             $table->enum('status', [
-                'Tersedia',
-                'Digunakan',
-                'Perbaikan'
-            ])->default('Tersedia');
-
-            // Relasi ke pegawai (nullable kalau belum dipakai)
-            $table->foreignId('pegawai_id')
-                  ->nullable()
-                  ->constrained('pegawai')
-                  ->nullOnDelete();
-            
-            $table->text('keterangan')->nullable();
+                'tersedia',
+                'dipakai'
+            ])->default('tersedia');
 
             $table->timestamps();
         });

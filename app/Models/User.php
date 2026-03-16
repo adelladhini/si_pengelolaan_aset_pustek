@@ -20,8 +20,8 @@ class User extends Authenticatable
         'name',
         'username',
         'password',
-        'role',
-        'force_change_password',
+        'role_id',
+        'status',
     ];
 
     /*
@@ -42,7 +42,7 @@ class User extends Authenticatable
     */
 
     protected $casts = [
-        'force_change_password' => 'boolean',
+        'status' => 'boolean',
     ];
 
     /*
@@ -51,10 +51,10 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    // User punya 1 Pegawai (FK ada di tabel pegawai)
-    public function pegawai()
+    // Relasi ke tabel roles
+    public function role()
     {
-        return $this->hasOne(Pegawai::class, 'user_id');
+        return $this->belongsTo(Role::class);
     }
 
     /*
@@ -63,18 +63,13 @@ class User extends Authenticatable
     |--------------------------------------------------------------------------
     */
 
-    public function hasRole($role)
-    {
-        return $this->role === $role;
-    }
-
     public function isAdmin()
     {
-        return $this->role === 'admin';
+        return $this->role && $this->role->nama_role === 'Admin';
     }
 
-    public function isPegawai()
+    public function isOperator()
     {
-        return $this->role === 'pegawai';
+        return $this->role && $this->role->nama_role === 'Operator';
     }
 }

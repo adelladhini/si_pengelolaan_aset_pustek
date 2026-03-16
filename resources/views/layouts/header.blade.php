@@ -44,23 +44,6 @@
                         Dark
                     </button>
                 </div>
-
-                <hr>
-
-                <!-- ZOOM -->
-                <label class="fw-semibold small">Ukuran Website</label>
-                <div class="d-flex gap-2 mt-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary w-100" data-zoom="80">
-                        Kecil
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary w-100" data-zoom="90">
-                        Sedang
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary w-100" data-zoom="100">
-                        Besar
-                    </button>
-                </div>
-
             </div>
         </div>
 

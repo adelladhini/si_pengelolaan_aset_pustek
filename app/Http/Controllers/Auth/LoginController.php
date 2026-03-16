@@ -18,7 +18,7 @@ class LoginController extends Controller
     }
 
     /**
-     * Proses login (User & Pegawai)
+     * Proses login
      */
     public function login(Request $request): RedirectResponse
     {
@@ -30,44 +30,25 @@ class LoginController extends Controller
 
         $credentials = $request->only('username', 'password');
 
-        /**
-         * 🔹 1. Coba login sebagai ADMIN (users)
-         */
-        if (Auth::guard('web')->attempt($credentials)) {
+        // Login user
+        if (Auth::attempt($credentials)) {
 
             $request->session()->regenerate();
 
-            return redirect()->intended(route('admin.index'));
+            return redirect()->route('dashboard');
         }
 
-        /**
-         * 🔹 2. Kalau gagal, coba login sebagai PEGAWAI
-         */
-        if (Auth::guard('pegawai')->attempt($credentials)) {
-
-            $request->session()->regenerate();
-
-            return redirect()->intended(route('pegawai.index'));
-        }
-
-        /**
-         * 🔹 Kalau dua-duanya gagal
-         */
         return back()->withErrors([
             'username' => 'Username atau password salah.',
         ])->onlyInput('username');
     }
 
     /**
-     * Logout (Auto detect guard)
+     * Logout
      */
     public function logout(Request $request): RedirectResponse
     {
-        if (Auth::guard('pegawai')->check()) {
-            Auth::guard('pegawai')->logout();
-        } elseif (Auth::guard('web')->check()) {
-            Auth::guard('web')->logout();
-        }
+        Auth::logout();
 
         $request->session()->invalidate();
         $request->session()->regenerateToken();

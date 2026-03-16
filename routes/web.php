@@ -4,11 +4,12 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\AdminController;
+use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\AsetController;
+use App\Http\Controllers\TransaksiAsetController;
+use App\Http\Controllers\UserController;
 use App\Http\Controllers\PengaturanAkunController;
-use App\Http\Controllers\SatkerController; 
 
 /*
 |--------------------------------------------------------------------------
@@ -43,27 +44,59 @@ Route::post('/logout', function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    // Dashboard
-    Route::get('/dashboard', [AdminController::class, 'index'])
-        ->name('admin.index');
+    /*
+    |--------------------------------------------------------------------------
+    | DASHBOARD
+    |--------------------------------------------------------------------------
+    */
 
-    // Pegawai
+    Route::get('/dashboard', [DashboardController::class, 'index'])
+        ->name('dashboard');
+
+    /*
+    |--------------------------------------------------------------------------
+    | DATA MASTER
+    |--------------------------------------------------------------------------
+    */
+
     Route::resource('pegawai', PegawaiController::class);
-
-    Route::post('/pegawai/{id}/reset', [PegawaiController::class, 'resetPassword'])
-    ->name('pegawai.reset');
-
-    // Aset
     Route::resource('aset', AsetController::class);
 
-    // Satker (TANPA prefix admin)
-    Route::resource('satker', SatkerController::class);
+    /*
+    |--------------------------------------------------------------------------
+    | TRANSAKSI ASET
+    |--------------------------------------------------------------------------
+    */
 
-    // Pengaturan akun
+    Route::resource('transaksi-aset', TransaksiAsetController::class);
+
+    // Pengembalian tablet
+    Route::patch('/transaksi-aset/kembali/{id}', 
+        [TransaksiAsetController::class, 'kembali']
+    )->name('transaksi-aset.kembali');
+
+    /*
+    |--------------------------------------------------------------------------
+    | MANAJEMEN USER
+    |--------------------------------------------------------------------------
+    */
+
+    Route::resource('users', UserController::class);
+
+    /*
+    |--------------------------------------------------------------------------
+    | PENGATURAN AKUN
+    |--------------------------------------------------------------------------
+    */
+
     Route::get('/pengaturan-akun', [PengaturanAkunController::class, 'index'])
         ->name('pengaturan.akun');
 
     Route::post('/pengaturan-akun/update', [PengaturanAkunController::class, 'update'])
         ->name('pengaturan.akun.update');
+
+    Route::patch('/pegawai/kembalikan-tablet/{id}',
+    [PegawaiController::class,'kembalikanTablet'])
+    ->name('pegawai.kembalikanTablet');
 
 });

@@ -8,27 +8,23 @@ return new class extends Migration
 {
     public function up(): void
     {
-        Schema::create('users', function (Blueprint $table) {
-            $table->id();
+    Schema::create('users', function (Blueprint $table) {
+        $table->id();
 
-            // Informasi dasar akun
-            $table->string('name');
-            $table->string('username')->unique();
-            $table->string('password');
+        $table->string('name');
+        $table->string('username')->unique();
+        $table->string('password');
 
-            // Role sistem
-            $table->enum('role', [
-                'admin',
-                'operator'
-            ])->default('operator');
+        $table->foreignId('role_id')
+            ->constrained('roles')
+            ->cascadeOnDelete();
 
-            // Status akun (aktif / nonaktif)
-            $table->boolean('status')->default(true);
+        $table->boolean('status')->default(true);
 
-            $table->rememberToken();
-            $table->timestamps();
-        });
-    }
+        $table->rememberToken();
+        $table->timestamps();
+    });
+        }
 
     public function down(): void
     {

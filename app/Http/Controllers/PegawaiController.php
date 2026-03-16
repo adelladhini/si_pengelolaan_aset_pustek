@@ -3,15 +3,18 @@
 namespace App\Http\Controllers;
 
 use App\Models\Pegawai;
-use App\Models\Satker;
+use App\Models\TransaksiAset;
+use App\Models\Aset;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 
 class PegawaiController extends Controller
 {
+    /**
+     * Tampilkan daftar pegawai
+     */
     public function index(Request $request)
     {
-        $query = Pegawai::with('satker');
+        $query = Pegawai::query();
 
         if ($request->search) {
             $query->where(function ($q) use ($request) {
@@ -20,112 +23,118 @@ class PegawaiController extends Controller
             });
         }
 
-        if ($request->satker_id) {
-            $query->where('satker_id', $request->satker_id);
-        }
+        $pegawai = $query->orderBy('nama', 'asc')->paginate(10);
 
-        $pegawai = $query->paginate(10);
-        $satker  = Satker::all();
+        return view('pegawai.index', compact('pegawai'));
+    }
 
-        return view('admin.pegawai.index', compact('pegawai', 'satker'));
-        }
+    /**
+     * Detail pegawai
+     */
+    public function show($id)
+    {
+        $pegawai = Pegawai::findOrFail($id);
 
-        public function create()
-        {
-            $satker = Satker::all();
-            return view('admin.pegawai.create', compact('satker'));
-        }
+        // tablet yang masih dipinjam pegawai
+        $transaksi = TransaksiAset::with('aset')
+                        ->where('pegawai_id', $id)
+                        ->whereNull('tanggal_kembali')
+                        ->get();
 
-        public function store(Request $request)
-        {
-            $request->validate([
-                'nip' => 'required|unique:pegawai,nip',
-                'nama' => 'required|string|max:255',
-                'jabatan' => 'required|string|max:255',
-                'satker_id' => 'required|exists:satker,id',
-                'tmt_pensiun' => 'nullable|date',
-            ]);
+        return view('pegawai.show', compact('pegawai', 'transaksi'));
+    }
 
-            Pegawai::create([
-                'nip' => $request->nip,
-                'nama' => $request->nama,
-                'jabatan' => ucwords(strtolower($request->jabatan)),
-                'satker_id' => $request->satker_id,
-                'tmt_pensiun' => $request->tmt_pensiun,
-                'is_active' => 1, // default aktif
-            ]);
+    /**
+     * Form tambah pegawai
+     */
+    public function create()
+    {
+        return view('pegawai.create');
+    }
 
-            return redirect()->route('pegawai.index')
-                ->with('success', 'Pegawai berhasil ditambahkan.');
-        }
+    /**
+     * Simpan pegawai baru
+     */
+    public function store(Request $request)
+    {
+        $request->validate([
+            'nip' => 'required|unique:pegawai,nip',
+            'nama' => 'required|string|max:255',
+            'jabatan' => 'nullable|string|max:255',
+            'unit_kerja' => 'nullable|string|max:255',
+            'no_hp' => 'nullable|string|max:20',
+            'email' => 'nullable|email',
+            'tmt_pensiun' => 'nullable|date',
+        ]);
 
-        public function edit($id)
-        {
-            $pegawai = Pegawai::findOrFail($id);
-            $satker  = Satker::all();
+        Pegawai::create($request->all());
 
-            return view('admin.pegawai.edit', compact('pegawai', 'satker'));
-        }
+        return redirect()->route('pegawai.index')
+            ->with('success', 'Data pegawai berhasil ditambahkan.');
+    }
 
-        public function update(Request $request, $id)
-        {
-            $pegawai = Pegawai::findOrFail($id);
+    /**
+     * Form edit pegawai
+     */
+    public function edit($id)
+    {
+        $pegawai = Pegawai::findOrFail($id);
 
-            $request->validate([
-                'nip' => 'required|unique:pegawai,nip,' . $pegawai->id,
-                'nama' => 'required|string|max:255',
-                'jabatan' => 'required|string|max:255',
-                'satker_id' => 'required|exists:satker,id',
-                'tmt_pensiun' => 'nullable|date',
-            ]);
+        return view('pegawai.edit', compact('pegawai'));
+    }
 
-            $pegawai->update([
-                'nip' => $request->nip,
-                'nama' => $request->nama,
-                'jabatan' => ucwords(strtolower($request->jabatan)),
-                'satker_id' => $request->satker_id,
-                'tmt_pensiun' => $request->tmt_pensiun,
-            ]);
+    /**
+     * Update pegawai
+     */
+    public function update(Request $request, $id)
+    {
+        $pegawai = Pegawai::findOrFail($id);
 
-            return redirect()->route('pegawai.index')
-                ->with('success', 'Pegawai berhasil diperbarui.');
-            }
+        $request->validate([
+            'nip' => 'required|unique:pegawai,nip,' . $pegawai->id,
+            'nama' => 'required|string|max:255',
+            'jabatan' => 'nullable|string|max:255',
+            'unit_kerja' => 'nullable|string|max:255',
+            'no_hp' => 'nullable|string|max:20',
+            'email' => 'nullable|email',
+            'tmt_pensiun' => 'nullable|date',
+        ]);
 
-            // NONAKTIF MANUAL
-            public function destroy($id)
-            {
-            $pegawai = Pegawai::findOrFail($id);
+        $pegawai->update($request->all());
 
-            // Hapus akun user jika ada
-            if ($pegawai->user) {
-                $pegawai->user->delete();
-            }
+        return redirect()->route('pegawai.index')
+            ->with('success', 'Data pegawai berhasil diperbarui.');
+    }
 
-            // Hapus data pegawai
-            $pegawai->delete();
+    /**
+     * Hapus pegawai
+     */
+    public function destroy($id)
+    {
+        $pegawai = Pegawai::findOrFail($id);
 
-            return redirect()->route('pegawai.index')
-                ->with('success', 'Pegawai berhasil dihapus.');
-        }
+        $pegawai->delete();
 
-            // RESET PASSWORD
-            public function resetPassword($id)
-            {
-                $pegawai = Pegawai::findOrFail($id);
+        return redirect()->route('pegawai.index')
+            ->with('success', 'Data pegawai berhasil dihapus.');
+    }
 
-                if (!$pegawai->user) {
-                    return redirect()->back()
-                        ->with('error', 'Pegawai belum memiliki akun.');
-                }
+    /**
+     * Tandai tablet sudah dikembalikan
+     */
+    public function kembalikanTablet($id)
+    {
+        $transaksi = TransaksiAset::findOrFail($id);
 
-                $defaultPassword = '12345678';
+        // isi tanggal kembali
+        $transaksi->tanggal_kembali = now();
+        $transaksi->save();
 
-                $pegawai->user->update([
-                    'password' => Hash::make($defaultPassword),
-                    'force_change_password' => true,
-                ]);
+        // ubah status aset menjadi tersedia
+        $aset = Aset::find($transaksi->aset_id);
+        $aset->status = 'Tersedia';
+        $aset->save();
 
-                return redirect()->route('pegawai.index')
-                    ->with('success', 'Password berhasil di-reset.');
-            }
-        }
+        return redirect()->back()->with('success','Tablet berhasil dikembalikan.');
+    }
+}

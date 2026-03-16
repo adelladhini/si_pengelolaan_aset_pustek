@@ -12,20 +12,30 @@ class Aset extends Model
     protected $table = 'aset';
 
     protected $fillable = [
-        'kode_bmn',
+        'kode_aset',
         'nama_aset',
+        'merk',
         'serial_number',
         'imei',
         'tahun_pengadaan',
         'kondisi',
-        'status',
-        'pegawai_id',
-        'keterangan'
+        'status'
     ];
 
-    // Relasi ke Pegawai
-    public function pegawai()
+    /*
+    |--------------------------------------------------------------------------
+    | Relationships
+    |--------------------------------------------------------------------------
+    */
+
+    // Aset memiliki banyak transaksi
+    public function transaksiAset()
     {
-        return $this->belongsTo(Pegawai::class);
+        return $this->hasMany(TransaksiAset::class);
+    }
+
+    public function transaksi()
+    {
+        return $this->hasMany(TransaksiAset::class);
     }
 }

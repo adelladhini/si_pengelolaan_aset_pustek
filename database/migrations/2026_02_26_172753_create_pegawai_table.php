@@ -9,29 +9,14 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('pegawai', function (Blueprint $table) {
-            $table->id();
-
-            // Relasi ke akun login (users)
-            $table->foreignId('user_id')
-                  ->nullable() // boleh null kalau belum dibuatkan akun
-                  ->constrained('users')
-                  ->cascadeOnDelete();
-
-            // Data pegawai
-            $table->string('nama');
+            $table->id(); // primary key
             $table->string('nip')->unique();
-            $table->string('jabatan');
-
-            // Relasi satker
-            $table->foreignId('satker_id')
-                  ->constrained('satker')
-                  ->restrictOnDelete();
-
+            $table->string('nama');
+            $table->string('jabatan')->nullable();
+            $table->string('unit_kerja')->nullable();
+            $table->string('no_hp')->nullable();
+            $table->string('email')->nullable();
             $table->date('tmt_pensiun')->nullable();
-            $table->string('no_hp', 20)->nullable();
-            $table->enum('status_pegawai', ['aktif','pensiun','nonaktif'])
-      ->default('aktif');
-            
             $table->timestamps();
         });
     }

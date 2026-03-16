@@ -13,12 +13,12 @@ class Pegawai extends Model
     protected $table = 'pegawai';
 
     protected $fillable = [
-        'nama',
         'nip',
-        'jabatan',       // manual string
-        'satker_id',
-        'user_id',       // PENTING kalau ada relasi user
+        'nama',
+        'jabatan',
+        'unit_kerja',
         'no_hp',
+        'email',
         'tmt_pensiun',
     ];
 
@@ -28,26 +28,14 @@ class Pegawai extends Model
 
     /*
     |--------------------------------------------------------------------------
-    | RELATIONS
+    | RELATIONSHIPS
     |--------------------------------------------------------------------------
     */
 
-    // Relasi ke Satker
-    public function satker()
+    // Pegawai memiliki banyak transaksi aset
+    public function transaksiAset()
     {
-        return $this->belongsTo(Satker::class, 'satker_id');
-    }
-
-    // Relasi ke Aset
-    public function aset()
-    {
-        return $this->hasOne(Aset::class, 'pegawai_id');
-    }
-
-    // Relasi ke User Login (FK ada di pegawai)
-    public function user()
-    {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->hasMany(TransaksiAset::class);
     }
 
     /*
@@ -78,5 +66,10 @@ class Pegawai extends Model
         }
 
         return '<span class="badge bg-success">Aktif</span>';
+    }
+
+    public function transaksi()
+    {
+        return $this->hasMany(TransaksiAset::class);
     }
 }

@@ -14,8 +14,8 @@
 
         <!-- ===== DASHBOARD ===== -->
         <div class="nav-item mb-2">
-            <a href="{{ route('admin.index') }}"
-               class="nav-link d-flex align-items-center {{ request()->routeIs('admin.index') ? 'active' : '' }}">
+            <a href="{{ route('dashboard') }}"
+               class="nav-link d-flex align-items-center {{ request()->routeIs('dashboard') ? 'active' : '' }}">
                 <i class="ri-dashboard-line me-2 fs-18"></i>
                 <span>Dashboard</span>
             </a>
@@ -30,21 +30,21 @@
             </a>
         </div>
 
-        <!-- ===== DATA SATKER ===== -->
-        <div class="nav-item mb-2">
-            <a href="{{ route('satker.index') }}"
-            class="nav-link d-flex align-items-center {{ request()->routeIs('satker.*') ? 'active' : '' }}">
-                <i class="ri-building-line me-2 fs-18"></i>
-                <span>Data Satker</span>
-            </a>
-        </div>
-
         <!-- ===== DATA ASET ===== -->
         <div class="nav-item mb-2">
             <a href="{{ route('aset.index') }}"
                class="nav-link d-flex align-items-center {{ request()->routeIs('aset.*') ? 'active' : '' }}">
                 <i class="ri-tablet-line me-2 fs-18"></i>
                 <span>Data Aset</span>
+            </a>
+        </div>
+
+        <!-- ===== TRANSAKSI ASET ===== -->
+        <div class="nav-item mb-2">
+            <a href="{{ route('transaksi-aset.index') }}"
+               class="nav-link d-flex align-items-center {{ request()->routeIs('transaksi-aset.*') ? 'active' : '' }}">
+                <i class="ri-exchange-line me-2 fs-18"></i>
+                <span>Transaksi Aset</span>
             </a>
         </div>
 
@@ -55,7 +55,6 @@
                 <span>Laporan Aset</span>
             </a>
         </div>
-
 
     </div>
 
