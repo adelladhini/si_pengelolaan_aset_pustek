@@ -145,7 +145,7 @@ function clearSearch() {
 function confirmDelete(id) {
     Swal.fire({
         title: 'Hapus Aset?',
-        text: "Data tidak bisa dikembalikan!",
+        text: "Data tidak bisa dikembalikann!",
         icon: 'warning',
 
         width: '340px',
