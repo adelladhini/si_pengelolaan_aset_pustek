@@ -19,7 +19,7 @@ class PegawaiController extends Controller
         if ($request->search) {
             $query->where(function ($q) use ($request) {
                 $q->where('nama', 'like', '%' . $request->search . '%')
-                  ->orWhere('nip', 'like', '%' . $request->search . '%');
+                  ->orWhere('unit_kerja', 'like', '%' . $request->search . '%');
             });
         }
 
@@ -41,7 +41,14 @@ class PegawaiController extends Controller
                         ->whereNull('tanggal_kembali')
                         ->get();
 
-        return view('pegawai.show', compact('pegawai', 'transaksi'));
+        // 🔥 TAMBAHAN: riwayat peminjaman (yang sudah dikembalikan)
+        $riwayat = TransaksiAset::with('aset')
+                        ->where('pegawai_id', $id)
+                        ->whereNotNull('tanggal_kembali')
+                        ->latest()
+                        ->get();
+
+        return view('pegawai.show', compact('pegawai', 'transaksi', 'riwayat'));
     }
 
     /**
@@ -137,4 +144,5 @@ class PegawaiController extends Controller
 
         return redirect()->back()->with('success','Tablet berhasil dikembalikan.');
     }
+    
 }

@@ -13,7 +13,7 @@
 
         <!-- TITLE DESKTOP -->
         <h6 class="mb-0 fw-bold d-none d-sm-block">
-            Sistem Informasi Pengelolaan Aset
+            Sistem Informasi Pengelolaan Aset Pustekinfo
         </h6>
 
         <!-- TITLE MOBILE -->
@@ -21,32 +21,6 @@
             SI ASET
         </h6>
     </div>
-
-
-    <!-- ================= RIGHT AREA ================= -->
-    <div class="d-flex align-items-center gap-3">
-
-        <!-- ================= SETTINGS ================= -->
-        <div class="dropdown">
-            <a href="#" data-bs-toggle="dropdown" class="text-dark">
-                <i class="ri-settings-3-line fs-20"></i>
-            </a>
-
-            <div class="dropdown-menu dropdown-menu-end p-3 shadow" style="width:260px">
-
-                <!-- SKIN MODE -->
-                <label class="fw-semibold small">Skin Mode</label>
-                <div class="d-flex gap-2 mt-2">
-                    <button type="button" class="btn btn-sm btn-outline-secondary w-100" data-skin="light">
-                        Light
-                    </button>
-                    <button type="button" class="btn btn-sm btn-outline-secondary w-100" data-skin="dark">
-                        Dark
-                    </button>
-                </div>
-            </div>
-        </div>
-
 
         <!-- ================= PROFILE ================= -->
         <div class="dropdown">
@@ -88,16 +62,6 @@
 
                 <!-- MENU -->
                 <div class="list-group list-group-flush">
-
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <i class="ri-question-line me-2"></i>
-                        Pusat Bantuan
-                    </a>
-
-                    <a href="#" class="list-group-item list-group-item-action">
-                        <i class="ri-lock-line me-2"></i>
-                        Pengaturan Privasi
-                    </a>
 
                     <a href="{{ route('pengaturan.akun') }}" 
                     class="list-group-item list-group-item-action">

@@ -22,69 +22,101 @@
     <link rel="stylesheet"
           href="{{ asset('admin-dashbyte/dist/assets/css/style.min.css') }}">
 
-    <style>
-        body {
-            background: #f4f6f9;
-        }
+<style>
+    body {
+        background: #f4f6f9;
+    }
 
-        .auth-bg {
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 48px 24px;
-        }
+    .auth-bg {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 48px 24px;
+    }
 
+    .auth-wrapper {
+        width: 100%;
+        max-width: 1100px;
+        min-height: 600px;
+        background: #ffffff;
+        border-radius: 20px;
+        overflow: hidden;
+        box-shadow: 0 25px 50px rgba(0,0,0,0.15);
+        display: flex;
+    }
+
+    .auth-left {
+        width: 45%;
+        padding: 56px 48px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .auth-right {
+        width: 55%;
+        background: url('{{ asset('admin-dashbyte/dist/assets/img/bg-dpr.jpg') }}')
+                    no-repeat center center;
+        background-size: cover;
+        position: relative;
+    }
+
+    .auth-right::before {
+        content: "";
+        position: absolute;
+        inset: 0;
+        background: rgba(255,255,255,0.4);
+        backdrop-filter: grayscale(100%) brightness(1.05);
+    }
+
+    @media (max-width: 768px) {
         .auth-wrapper {
-            width: 100%;
-            max-width: 1100px;
-            min-height: 600px;
-            background: #ffffff;
-            border-radius: 20px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.15);
-            display: flex;
-        }
-
-        .auth-left {
-            width: 45%;
-            padding: 56px 48px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
+            min-height: auto;
         }
 
         .auth-right {
-            width: 55%;
-            background: url('{{ asset('admin-dashbyte/dist/assets/img/bg-dpr.jpg') }}')
-                        no-repeat center center;
-            background-size: cover;
-            position: relative;
+            display: none;
         }
 
-        .auth-right::before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: rgba(255,255,255,0.75);
-            backdrop-filter: grayscale(100%) brightness(1.05);
+        .auth-left {
+            width: 100%;
         }
+    }
 
-        @media (max-width: 768px) {
-            .auth-wrapper {
-                flex-direction: column;
-                min-height: auto;
-            }
+    /* ================= THEME LOGIN ================= */
 
-            .auth-right {
-                display: none;
-            }
+    /* tombol */
+    .btn-primary {
+        background-color: #067788 !important;
+        border-color: #067788 !important;
+        color: #fff !important;
+    }
 
-            .auth-left {
-                width: 100%;
-            }
-        }
-    </style>
+    .btn-primary:hover {
+        background-color: #055e6a !important;
+        border-color: #055e6a !important;
+    }
+
+    /* link */
+    .auth-left a {
+        color: #067788 !important;
+        font-weight: 500;
+    }
+
+    .auth-left a:hover {
+        color: #055e6a !important;
+        text-decoration: underline;
+    }
+
+    /* input focus */
+.form-control:focus {
+    border-color: #067788;
+    box-shadow: 0 0 0 0.2rem rgba(6,119,136,0.2);
+}
+</style>
+
 </head>
 
 <body>

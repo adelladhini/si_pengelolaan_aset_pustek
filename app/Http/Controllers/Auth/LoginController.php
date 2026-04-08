@@ -10,7 +10,7 @@ use Illuminate\Http\RedirectResponse;
 class LoginController extends Controller
 {
     /**
-     * Tampilkan halaman login
+     * Halaman login
      */
     public function showLoginForm()
     {
@@ -18,11 +18,11 @@ class LoginController extends Controller
     }
 
     /**
-     * Proses login
+     * Proses login (Admin & Operator saja)
      */
     public function login(Request $request): RedirectResponse
     {
-        // Validasi input
+        // Validasi
         $request->validate([
             'username' => 'required|string',
             'password' => 'required|string',
@@ -30,14 +30,15 @@ class LoginController extends Controller
 
         $credentials = $request->only('username', 'password');
 
-        // Login user
+        // Login pakai guard web
         if (Auth::attempt($credentials)) {
 
             $request->session()->regenerate();
 
-            return redirect()->route('dashboard');
+            return redirect()->route('dashboard'); // ✅ FIX DISINI
         }
 
+        // Kalau gagal
         return back()->withErrors([
             'username' => 'Username atau password salah.',
         ])->onlyInput('username');

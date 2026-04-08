@@ -10,88 +10,95 @@ use Carbon\Carbon;
 
 class DashboardController extends Controller
 {
-    public function index()
-    {
+public function index(Request $request)
+{
+    /*
+    ==========================================
+    DATA UTAMA
+    ==========================================
+    */
 
-        /*
-        ==========================================
-        DATA UTAMA
-        ==========================================
-        */
+    $totalPegawai = Pegawai::count();
+    $totalAset = Aset::count();
 
-        $totalPegawai = Pegawai::count();
-        $totalAset = Aset::count();
-
-        // aset yang sedang dipakai (belum dikembalikan)
-        $asetTerpakai = TransaksiAset::whereNull('tanggal_kembali')->count();
-
-        // aset yang tersedia
-        $asetBelum = Aset::where('status','Tersedia')->count();
+    $asetTerpakai = TransaksiAset::whereNull('tanggal_kembali')->count();
+    $asetBelum = Aset::where('status','Tersedia')->count();
 
 
-        /*
-        ==========================================
-        KONDISI ASET
-        ==========================================
-        */
+    /*
+    ==========================================
+    KONDISI ASET
+    ==========================================
+    */
 
-        $asetBaik = Aset::where('kondisi','Baik')->count();
-
-        $asetRusakRingan = Aset::where('kondisi','Rusak Ringan')->count();
-
-        $asetRusakBerat = Aset::where('kondisi','Rusak Berat')->count();
-
-        $asetRusak = Aset::where('kondisi','Rusak Ringan')
-                        ->orWhere('kondisi','Rusak Berat')
-                        ->count();
+    $asetBaik = Aset::where('kondisi','Baik')->count();
+    $asetRusakRingan = Aset::where('kondisi','Rusak Ringan')->count();
+    $asetRusakBerat = Aset::where('kondisi','Rusak Berat')->count();
+    $asetRusak = Aset::where('kondisi','Rusak Ringan')
+                    ->orWhere('kondisi','Rusak Berat')
+                    ->count();
+    $asetHilang = Aset::where('kondisi','Hilang')->count();
 
 
-        /*
-        ==========================================
-        PEGAWAI MEMEGANG TABLET
-        ==========================================
-        */
+    /*
+    ==========================================
+    PEGAWAI MEMEGANG TABLET
+    ==========================================
+    */
 
-        $pegawaiMemegangTablet = TransaksiAset::whereNull('tanggal_kembali')
-                                ->distinct('pegawai_id')
-                                ->count('pegawai_id');
-
-
-        /*
-        ==========================================
-        TRANSAKSI TERBARU
-        ==========================================
-        */
-
-        $transaksiTerbaru = TransaksiAset::with(['pegawai','aset'])
-                            ->latest()
-                            ->take(5)
-                            ->get();
+    $pegawaiMemegangTablet = TransaksiAset::whereNull('tanggal_kembali')
+                            ->distinct('pegawai_id')
+                            ->count('pegawai_id');
 
 
-        /*
-        ==========================================
-        GRAFIK PEMINJAMAN BULANAN
-        ==========================================
-        */
+    /*
+    ==========================================
+    TRANSAKSI TERBARU
+    ==========================================
+    */
 
-        $peminjamanBulanan = TransaksiAset::selectRaw("
-                DATE_FORMAT(tanggal_pinjam,'%b') as bulan,
-                COUNT(*) as total,
-                MIN(tanggal_pinjam) as urut
-            ")
-            ->groupBy('bulan')
-            ->orderBy('urut')
-            ->pluck('total','bulan');
+    $transaksiTerbaru = TransaksiAset::with(['pegawai','aset'])
+                        ->latest()
+                        ->take(5)
+                        ->get();
 
 
-        /*
-        ==========================================
-        NOTIF PEGAWAI AKAN PENSIUN (30 HARI)
-        ==========================================
-        */
+    /*
+    ==========================================
+    GRAFIK PEMINJAMAN BULANAN (FIX)
+    ==========================================
+    */
 
-        $notifPensiun = Pegawai::whereDate('tmt_pensiun','<=', Carbon::now()->addDays(30))
+    $tahun = $request->tahun ?? date('Y');
+
+    $dataRaw = TransaksiAset::selectRaw('MONTH(tanggal_pinjam) as bulan, COUNT(*) as total')
+        ->whereYear('tanggal_pinjam', $tahun)
+        ->groupBy('bulan')
+        ->orderBy('bulan')
+        ->pluck('total','bulan')
+        ->toArray();
+
+    $namaBulan = [
+        1=>'Jan',2=>'Feb',3=>'Mar',4=>'Apr',5=>'Mei',6=>'Jun',
+        7=>'Jul',8=>'Agu',9=>'Sep',10=>'Okt',11=>'Nov',12=>'Des'
+    ];
+
+    $labels = [];
+    $data = [];
+
+    for ($i = 1; $i <= 12; $i++) {
+        $labels[] = $namaBulan[$i];
+        $data[] = $dataRaw[$i] ?? 0;
+    }
+
+
+    /*
+    ==========================================
+    NOTIF PEGAWAI AKAN PENSIUN
+    ==========================================
+    */
+
+    $notifPensiun = Pegawai::whereDate('tmt_pensiun','<=', Carbon::now()->addDays(7))
         ->whereDate('tmt_pensiun','>=', Carbon::now())
         ->whereHas('transaksiAset', function ($q) {
             $q->whereNull('tanggal_kembali');
@@ -99,25 +106,28 @@ class DashboardController extends Controller
         ->get();
 
 
-        /*
-        ==========================================
-        RETURN VIEW
-        ==========================================
-        */
+    /*
+    ==========================================
+    RETURN VIEW (SATU SAJA!)
+    ==========================================
+    */
 
-        return view('admin.index', compact(
-            'totalPegawai',
-            'totalAset',
-            'asetTerpakai',
-            'asetBelum',
-            'asetBaik',
-            'asetRusakRingan',
-            'asetRusakBerat',
-            'asetRusak',
-            'pegawaiMemegangTablet',
-            'transaksiTerbaru',
-            'peminjamanBulanan',
-            'notifPensiun'
-        ));
-    }
+    return view('dashboard.index', compact(
+        'totalPegawai',
+        'totalAset',
+        'asetTerpakai',
+        'asetBelum',
+        'asetBaik',
+        'asetRusakRingan',
+        'asetRusakBerat',
+        'asetRusak',
+        'asetHilang',
+        'pegawaiMemegangTablet',
+        'transaksiTerbaru',
+        'notifPensiun',
+        'labels',
+        'data',
+        'tahun'
+    ));
+}
 }

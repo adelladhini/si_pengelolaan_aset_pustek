@@ -18,7 +18,7 @@ class PengaturanAkunController extends Controller
         $user = Auth::user();
 
         $request->validate([
-            'nama' => 'required|string|max:255',
+            'nama' => 'required|string|max:100',
             'password' => 'nullable|min:6|confirmed',
         ]);
 

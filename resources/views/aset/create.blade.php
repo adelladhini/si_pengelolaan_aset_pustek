@@ -18,16 +18,15 @@
 <div class="row">
 
 <div class="col-md-6 mb-3">
-<label class="form-label">Kode Aset</label>
+<label class="form-label">Kode BMN</label>
 
 <input type="text"
-name="kode_aset"
-class="form-control @error('kode_aset') is-invalid @enderror"
-placeholder="Contoh: TAB001"
-value="{{ old('kode_aset') }}"
+name="kode_bmn"
+class="form-control @error('kode_bmn') is-invalid @enderror"
+value="{{ old('kode_bmn') }}"
 required>
 
-@error('kode_aset')
+@error('kode_bmn')
 <div class="invalid-feedback">
 {{ $message }}
 </div>
@@ -37,13 +36,13 @@ required>
 
 
 <div class="col-md-6 mb-3">
-<label class="form-label">Nama Aset</label>
+<label class="form-label">Tipe</label>
 
 <input type="text"
-name="nama_aset"
+name="tipe"
 class="form-control"
-placeholder="Contoh: Tablet Samsung"
-value="{{ old('nama_aset') }}"
+placeholder="Samsung Galaxy Tab S8 5G"
+value="{{ old('tipe') }}"
 required>
 
 </div>
@@ -55,7 +54,7 @@ required>
 <input type="text"
 name="merk"
 class="form-control"
-placeholder="Contoh: Samsung"
+placeholder="Samsung"
 value="{{ old('merk') }}">
 
 </div>
@@ -98,11 +97,13 @@ value="{{ old('imei') }}">
 <div class="col-md-6 mb-3">
 <label class="form-label">Tahun Pengadaan</label>
 
-<input type="number"
+<input type="text"
 name="tahun_pengadaan"
 class="form-control"
-placeholder="2024"
-value="{{ old('tahun_pengadaan') }}">
+placeholder="2022"
+maxlength="4"
+value="{{ old('tahun_pengadaan') }}"
+oninput="this.value = this.value.replace(/[^0-9]/g, '')">
 
 </div>
 
@@ -124,26 +125,30 @@ Rusak Ringan
 Rusak Berat
 </option>
 
+<option value="Hilang" {{ old('kondisi') == 'Hilang' ? 'selected' : '' }}>
+Hilang
+</option>
+
 </select>
 
 </div>
 
 </div>
 
+<div class="d-flex justify-content-between mt-3">
 
-<div class="d-flex justify-content-end mt-3">
+    <!-- KIRI -->
+    <a href="{{ route('aset.index') }}" class="btn btn-outline-secondary">
+        Kembali
+    </a>
 
-<a href="{{ route('aset.index') }}"
-class="btn btn-secondary me-2">
-Kembali
-</a>
-
-<button type="submit"
-class="btn btn-primary">
-Simpan Aset
-</button>
+    <!-- KANAN -->
+    <button type="submit" class="btn btn-primary">
+        Simpan
+    </button>
 
 </div>
+
 
 </form>
 

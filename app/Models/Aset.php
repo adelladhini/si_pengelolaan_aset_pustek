@@ -4,16 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\TransaksiAset;
 
 class Aset extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
 
     protected $table = 'aset';
 
     protected $fillable = [
-        'kode_aset',
-        'nama_aset',
+        'kode_bmn',
+        'tipe',
         'merk',
         'serial_number',
         'imei',
@@ -28,13 +30,8 @@ class Aset extends Model
     |--------------------------------------------------------------------------
     */
 
-    // Aset memiliki banyak transaksi
+    // Relasi ke transaksi aset
     public function transaksiAset()
-    {
-        return $this->hasMany(TransaksiAset::class);
-    }
-
-    public function transaksi()
     {
         return $this->hasMany(TransaksiAset::class);
     }

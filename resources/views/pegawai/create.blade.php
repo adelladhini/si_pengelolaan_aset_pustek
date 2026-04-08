@@ -52,7 +52,7 @@
        name="jabatan"
        class="form-control"
        value="{{ old('jabatan') }}"
-       placeholder="Contoh: Analis Sistem">
+       placeholder="Analis Sistem">
 </div>
 
 
@@ -62,7 +62,16 @@
        name="unit_kerja"
        class="form-control"
        value="{{ old('unit_kerja') }}"
-       placeholder="Contoh: Pustekinfo">
+       placeholder="Pustekinfo">
+</div>
+
+<div class="col-md-6 mb-3">
+<label>Gedung</label>
+<input type="text"
+       name="gedung"
+       class="form-control"
+       value="{{ old('gedung') }}"
+       placeholder="Nusantara 1">
 </div>
 
 
@@ -94,16 +103,19 @@
 
 </div>
 
+<div class="d-flex justify-content-between mt-3">
 
-<button class="btn btn-primary">
-Simpan
-</button>
+    <!-- KIRI -->
+    <a href="{{ route('pegawai.index') }}" class="btn btn-outline-secondary">
+        Kembali
+    </a>
 
-<a href="{{ route('pegawai.index') }}"
-   class="btn btn-secondary">
-Kembali
-</a>
+    <!-- KANAN -->
+    <button type="submit" class="btn btn-primary">
+        Simpan
+    </button>
 
+</div>
 </form>
 
 </div>

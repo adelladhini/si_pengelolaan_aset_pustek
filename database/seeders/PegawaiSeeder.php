@@ -10,23 +10,25 @@ class PegawaiSeeder extends Seeder
     public function run(): void
     {
         Pegawai::create([
-            'nip' => '1987654321',
-            'nama' => 'Budi Santoso',
-            'jabatan' => 'Analis Sistem',
+            'nip' => '198008132009121001',
+            'nama' => 'Erdinal Hendradjaja, ST., M.Sc.',
+            'jabatan' => 'Kepala Pusat Teknologi Informasi',
             'unit_kerja' => 'Pustekinfo',
-            'no_hp' => '081234567890',
-            'email' => 'budi@pustekinfo.go.id',
-            'tmt_pensiun' => '2045-01-01'
+            'gedung' => 'Nusantara 1',
+            'no_hp' => '08129394155',
+            'email' => 'erdin@pustekinfo.go.id',
+            'tmt_pensiun' => '2040-09-01'
         ]);
 
         Pegawai::create([
-            'nip' => '1987654322',
-            'nama' => 'Siti Rahma',
-            'jabatan' => 'Staff IT',
+            'nip' => '198001082009121001',
+            'nama' => 'Fariza Emra, S.T., M.Sc.',
+            'jabatan' => 'Kepala Bidang Sistem Informasi dan Infrastruktur Teknologi Informasi',
             'unit_kerja' => 'Pustekinfo',
-            'no_hp' => '081298765432',
-            'email' => 'siti@pustekinfo.go.id',
-            'tmt_pensiun' => '2043-01-01'
+            'gedung' => 'Nusantara 1',
+            'no_hp' => '08561223355',
+            'email' => 'farizaa@pustekinfo.go.id',
+            'tmt_pensiun' => '2038-02-01'
         ]);
     }
 }

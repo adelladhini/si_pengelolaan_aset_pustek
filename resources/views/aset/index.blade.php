@@ -6,72 +6,102 @@
 
 <!-- HEADER -->
 <div class="d-flex justify-content-between align-items-center mb-4">
-<h4 class="fw-bold mb-0">Data Aset</h4>
+    <h4 class="fw-bold mb-0">Data Aset</h4>
 
-<a href="{{ route('aset.create') }}" class="btn btn-primary btn-sm">
-+ Tambah Aset
-</a>
+    <a href="{{ route('aset.create') }}" class="btn btn-primary btn-sm">
+        <i class="bi bi-plus-lg"></i> Tambah Aset
+    </a>
 </div>
 
-
-<!-- SEARCH & FILTER -->
-<div class="card mb-3">
+<!-- SEARCH + FILTER -->
+<div class="card shadow-sm border-0 mb-3">
 <div class="card-body">
 
 <form method="GET" action="{{ route('aset.index') }}">
 
-<div class="row g-2 align-items-center">
+<div class="row align-items-center g-2">
 
+<!-- SEARCH -->
 <div class="col-md-4">
+    <div class="search-wrapper">
+        <div class="search-box">
 
-<div class="input-group">
+            <input type="text"
+            name="search"
+            class="form-control"
+            placeholder="Cari..."
+            value="{{ request('search') }}">
 
-<span class="input-group-text bg-white">
-<i class="bi bi-search"></i>
-</span>
+            <button class="btn btn-success btn-search">
+                <i class="bi bi-search"></i>
+            </button>
 
-<input type="text"
-name="search"
-class="form-control"
-placeholder="Cari kode / nama aset..."
-value="{{ request('search') }}">
+            <a href="{{ route('aset.index') }}"
+            class="btn btn-reset">
+                <i class="bi bi-x"></i>
+            </a>
 
-<button class="btn btn-success btn-sm">
-Cari
-</button>
-
+        </div>
+    </div>
 </div>
 
-</div>
+    <!-- FILTER -->
+    <div class="col-md-8 text-end">
 
+        <div class="dropdown d-inline-block">
 
-<!-- FILTER STATUS -->
-<div class="col-md-3">
+            <button class="btn btn-outline-secondary dropdown-toggle"
+                data-bs-toggle="dropdown"
+                data-bs-display="static"
+                data-bs-boundary="viewport">
+                <i class="bi bi-funnel"></i> Filter
+            </button>
 
-<select name="status" class="form-control">
+            <div class="dropdown-menu dropdown-menu-end p-3 shadow filter-dropdown">
 
-<option value="">Semua Status</option>
+                <!-- TIPE -->
+                <label class="form-label">Tipe</label>
+                <select name="tipe" class="form-select select2 mb-2">
+                    <option value="">Semua</option>
+                    @foreach($tipeList as $tipe)
+                        <option value="{{ $tipe }}" {{ request('tipe') == $tipe ? 'selected' : '' }}>
+                            {{ $tipe }}
+                        </option>
+                    @endforeach
+                </select>
 
-<option value="Tersedia"
-{{ request('status') == 'Tersedia' ? 'selected' : '' }}>
-Tersedia
-</option>
+                <!-- KONDISI -->
+                <label class="form-label">Kondisi</label>
+                <select name="kondisi" class="form-select select2 mb-2">
+                    <option value="">Semua</option>
+                    <option value="baik">Baik</option>
+                    <option value="rusak ringan">Rusak Ringan</option>
+                    <option value="rusak berat">Rusak Berat</option>
+                    <option value="hilang">Hilang</option>
+                </select>
 
-<option value="Dipakai"
-{{ request('status') == 'Dipakai' ? 'selected' : '' }}>
-Dipakai
-</option>
+                <!-- TAHUN -->
+                <label class="form-label">Tahun</label>
+                <select name="tahun" class="form-select select2 mb-3">
+                    <option value="">Semua</option>
+                    @foreach($tahunList as $tahun)
+                        <option value="{{ $tahun }}" {{ request('tahun') == $tahun ? 'selected' : '' }}>
+                            {{ $tahun }}
+                        </option>
+                    @endforeach
+                </select>
 
-</select>
+                <!-- BUTTON -->
+                <div class="d-flex justify-content-between">
+                    <a href="{{ route('aset.index') }}" class="btn btn-light btn-sm">Reset</a>
+                    <button class="btn btn-primary btn-sm">Terapkan</button>
+                </div>
 
-</div>
+            </div>
 
+        </div>
 
-<div class="col-md-2">
-<a href="{{ route('aset.index') }}" class="btn btn-secondary btn-sm">
-Reset
-</a>
-</div>
+    </div>
 
 </div>
 
@@ -80,28 +110,25 @@ Reset
 </div>
 </div>
 
-
 <!-- SUCCESS MESSAGE -->
 @if(session('success'))
-<div class="alert alert-success alert-dismissible fade show">
-{{ session('success') }}
-<button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+<div class="alert alert-custom-success alert-dismissible fade show mb-3">
+    {{ session('success') }}
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
 </div>
 @endif
 
-
 <!-- TABLE -->
-<div class="card">
+<div class="card shadow-sm border-0 mb-3">
 <div class="card-body table-responsive">
 
-<table class="table table-bordered table-hover align-middle">
+<table class="table table-bordered table-hover align-middle mb-0">
 
 <thead class="table-light text-center">
-
 <tr>
 <th width="60">No</th>
-<th>Kode Aset</th>
-<th>Nama Aset</th>
+<th>Kode BMN</th>
+<th>Tipe</th>
 <th>Merk</th>
 <th>Serial Number</th>
 <th>IMEI</th>
@@ -110,87 +137,72 @@ Reset
 <th>Status</th>
 <th width="150">Aksi</th>
 </tr>
-
 </thead>
 
 <tbody>
-
 @forelse($aset as $item)
-
 <tr>
 
 <td class="text-center">
 {{ $aset->firstItem() + $loop->index }}
 </td>
 
-<td>{{ $item->kode_aset }}</td>
-
-<td>{{ $item->nama_aset }}</td>
-
+<td>{{ $item->kode_bmn }}</td>
+<td>{{ $item->tipe }}</td>
 <td>{{ $item->merk ?? '-' }}</td>
-
 <td>{{ $item->serial_number ?? '-' }}</td>
-
 <td>{{ $item->imei ?? '-' }}</td>
-
 <td>{{ $item->tahun_pengadaan ?? '-' }}</td>
-
 
 <!-- KONDISI -->
 <td class="text-center">
-
 @if(strtolower($item->kondisi) == 'baik')
-<span class="badge bg-success">Baik</span>
+<span class="badge-custom badge-baik">Baik</span>
 
 @elseif(strtolower($item->kondisi) == 'rusak ringan')
-<span class="badge bg-warning">Rusak Ringan</span>
+<span class="badge-custom badge-ringan">Rusak Ringan</span>
+
+@elseif(strtolower($item->kondisi) == 'rusak berat')
+<span class="badge-custom badge-berat">Rusak Berat</span>
+
+@elseif(strtolower($item->kondisi) == 'hilang')
+<span class="badge-custom badge-hilang">Hilang</span>
 
 @else
-<span class="badge bg-danger">Rusak Berat</span>
-
+<span class="badge bg-secondary">-</span>
 @endif
-
 </td>
-
 
 <!-- STATUS -->
 <td class="text-center">
-
 @if(strtolower($item->status) == 'tersedia')
-<span class="badge bg-primary">Tersedia</span>
-
+<span class="badge-custom badge-tersedia">Tersedia</span>
 @else
-<span class="badge bg-secondary">Dipakai</span>
-
+<span class="badge-custom badge-dipakai">Dipakai</span>
 @endif
-
 </td>
-
 
 <!-- AKSI -->
 <td class="text-center">
 
 <a href="{{ route('aset.edit',$item->id) }}"
-class="btn btn-warning btn-sm me-1">
-
+class="btn btn-edit btn-sm me-1">
 <i class="bi bi-pencil"></i>
-
 </a>
 
+<form id="delete-form-aset-{{ $item->id }}"
+    action="{{ route('aset.destroy',$item->id) }}"
+    method="POST"
+    class="d-inline">
 
-<form action="{{ route('aset.destroy',$item->id) }}"
-method="POST"
-class="d-inline">
+    @csrf
+    @method('DELETE')
 
-@csrf
-@method('DELETE')
-
-<button class="btn btn-danger btn-sm"
-onclick="return confirm('Hapus aset ini?')">
-
-<i class="bi bi-trash"></i>
-
-</button>
+    <button type="button"
+        class="btn btn-delete btn-sm"
+        onclick="confirmDeleteAset({{ $item->id }})">
+        <i class="bi bi-trash"></i>
+    </button>
 
 </form>
 
@@ -199,15 +211,12 @@ onclick="return confirm('Hapus aset ini?')">
 </tr>
 
 @empty
-
 <tr>
-<td colspan="10" class="text-center">
+<td colspan="10" class="text-center text-muted py-3">
 Belum ada data aset
 </td>
 </tr>
-
 @endforelse
-
 </tbody>
 
 </table>

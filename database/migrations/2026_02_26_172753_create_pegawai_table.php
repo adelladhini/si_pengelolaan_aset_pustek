@@ -10,14 +10,16 @@ return new class extends Migration
     {
         Schema::create('pegawai', function (Blueprint $table) {
             $table->id(); // primary key
-            $table->string('nip')->unique();
+            $table->string('nip', 18)->unique();
             $table->string('nama');
             $table->string('jabatan')->nullable();
             $table->string('unit_kerja')->nullable();
-            $table->string('no_hp')->nullable();
+            $table->string('gedung')->nullable();
+            $table->string('no_hp', 13)->nullable();
             $table->string('email')->nullable();
             $table->date('tmt_pensiun')->nullable();
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

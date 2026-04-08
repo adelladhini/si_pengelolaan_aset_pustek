@@ -11,21 +11,22 @@ return new class extends Migration
         Schema::create('aset', function (Blueprint $table) {
             $table->id();
 
-            $table->string('kode_aset')->unique();
-            $table->string('nama_aset');
+            $table->string('kode_bmn', 50)->unique();
+            $table->string('tipe');
 
             $table->string('merk')->nullable();
 
             // Tambahan identitas perangkat
-            $table->string('serial_number')->nullable()->unique();
-            $table->string('imei')->nullable()->unique();
+            $table->string('serial_number', 20)->nullable()->unique(); 
+            $table->string('imei', 20)->nullable()->unique();
 
             $table->year('tahun_pengadaan')->nullable();
 
             $table->enum('kondisi', [
                 'baik',
                 'rusak ringan',
-                'rusak berat'
+                'rusak berat',
+                'hilang'
             ])->default('baik');
 
             $table->enum('status', [
@@ -34,6 +35,7 @@ return new class extends Migration
             ])->default('tersedia');
 
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

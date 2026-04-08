@@ -9,28 +9,46 @@ class AsetController extends Controller
 {
 
     /**
-     * Tampilkan daftar aset
+     * Tampilkan daftar aset + search + filter
      */
     public function index(Request $request)
     {
         $query = Aset::query();
 
-        // SEARCH
+        // ================= SEARCH =================
         if ($request->search) {
             $query->where(function ($q) use ($request) {
-                $q->where('kode_aset', 'like', '%' . $request->search . '%')
-                  ->orWhere('nama_aset', 'like', '%' . $request->search . '%');
+                $q->where('kode_bmn', 'like', '%' . $request->search . '%')
+                  ->orWhere('tipe', 'like', '%' . $request->search . '%')
+                  ->orWhere('merk', 'like', '%' . $request->search . '%');
             });
         }
 
-        // FILTER STATUS
+        // ================= FILTER =================
+
+        if ($request->tipe) {
+            $query->where('tipe', $request->tipe);
+        }
+
+        if ($request->kondisi) {
+            $query->where('kondisi', $request->kondisi);
+        }
+
+        if ($request->tahun) {
+            $query->where('tahun_pengadaan', $request->tahun);
+        }
+
         if ($request->status) {
             $query->where('status', $request->status);
         }
 
-        $aset = $query->orderBy('kode_aset','asc')->paginate(10);
+        // ================= DATA =================
+        $aset = $query->orderBy('kode_bmn', 'asc')->paginate(10);
 
-        return view('aset.index', compact('aset'));
+        $tipeList = Aset::select('tipe')->distinct()->pluck('tipe');
+        $tahunList = Aset::select('tahun_pengadaan')->distinct()->pluck('tahun_pengadaan');
+
+        return view('aset.index', compact('aset', 'tipeList', 'tahunList'));
     }
 
 
@@ -49,22 +67,22 @@ class AsetController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'kode_aset' => 'required|unique:aset,kode_aset',
-            'nama_aset' => 'required|string|max:255',
+            'kode_bmn' => 'required|unique:aset,kode_bmn',
+            'tipe' => 'required|string|max:255',
             'merk' => 'nullable|string|max:255',
             'serial_number' => 'nullable|string|max:255|unique:aset,serial_number',
             'imei' => 'nullable|string|max:255|unique:aset,imei',
             'tahun_pengadaan' => 'nullable|numeric',
             'kondisi' => 'required'
         ],[
-            'kode_aset.unique' => '⚠️ Kode aset sudah digunakan.',
+            'kode_bmn.unique' => '⚠️ Kode aset sudah terdaftar.',
             'serial_number.unique' => '⚠️ Serial Number sudah terdaftar.',
-            'imei.unique' => '⚠️ IMEI sudah terdaftar pada aset lain.'
+            'imei.unique' => '⚠️ IMEI sudah terdaftar.'
         ]);
 
         Aset::create([
-            'kode_aset' => $request->kode_aset,
-            'nama_aset' => $request->nama_aset,
+            'kode_bmn' => $request->kode_bmn,
+            'tipe' => $request->tipe,
             'merk' => $request->merk,
             'serial_number' => $request->serial_number,
             'imei' => $request->imei,
@@ -84,7 +102,6 @@ class AsetController extends Controller
     public function edit($id)
     {
         $aset = Aset::findOrFail($id);
-
         return view('aset.edit', compact('aset'));
     }
 
@@ -97,8 +114,8 @@ class AsetController extends Controller
         $aset = Aset::findOrFail($id);
 
         $request->validate([
-            'kode_aset' => 'required|unique:aset,kode_aset,' . $aset->id,
-            'nama_aset' => 'required|string|max:255',
+            'kode_bmn' => 'required|unique:aset,kode_bmn,' . $aset->id,
+            'tipe' => 'required|string|max:255',
             'merk' => 'nullable|string|max:255',
             'serial_number' => 'nullable|string|max:255|unique:aset,serial_number,' . $aset->id,
             'imei' => 'nullable|string|max:255|unique:aset,imei,' . $aset->id,
@@ -106,14 +123,14 @@ class AsetController extends Controller
             'kondisi' => 'required',
             'status' => 'required'
         ],[
-            'kode_aset.unique' => '⚠️ Kode aset sudah digunakan.',
+            'kode_bmn.unique' => '⚠️ Kode aset sudah terdaftar.',
             'serial_number.unique' => '⚠️ Serial Number sudah terdaftar.',
-            'imei.unique' => '⚠️ IMEI sudah terdaftar pada aset lain.'
+            'imei.unique' => '⚠️ IMEI sudah terdaftar.'
         ]);
 
         $aset->update([
-            'kode_aset' => $request->kode_aset,
-            'nama_aset' => $request->nama_aset,
+            'kode_bmn' => $request->kode_bmn,
+            'tipe' => $request->tipe,
             'merk' => $request->merk,
             'serial_number' => $request->serial_number,
             'imei' => $request->imei,
@@ -128,15 +145,52 @@ class AsetController extends Controller
 
 
     /**
-     * Hapus aset
+     * Hapus aset (Soft Delete)
      */
     public function destroy($id)
     {
         $aset = Aset::findOrFail($id);
-
         $aset->delete();
 
         return redirect()->route('aset.index')
-            ->with('success','Data aset berhasil dihapus');
+            ->with('success','Data aset berhasil dihapus (masuk ke trash)');
     }
+
+
+    /**
+     * Tampilkan data yang dihapus (Trash)
+     */
+    public function trash()
+    {
+        $data = Aset::onlyTrashed()->get();
+
+        return view('aset.trash', compact('data'));
+    }
+
+
+    /**
+     * Restore data
+     */
+    public function restore($id)
+    {
+        $aset = Aset::withTrashed()->findOrFail($id);
+        $aset->restore();
+
+        return redirect()->route('aset.trash')
+            ->with('success','Data berhasil dikembalikan');
+    }
+
+
+    /**
+     * Hapus permanen
+     */
+    public function forceDelete($id)
+    {
+        $aset = Aset::withTrashed()->findOrFail($id);
+        $aset->forceDelete();
+
+        return redirect()->route('aset.trash')
+            ->with('success','Data dihapus permanen');
+    }
+
 }

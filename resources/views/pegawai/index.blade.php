@@ -2,64 +2,44 @@
 
 @section('content')
 
-<div class="container-fluid">
+    <div class="container-fluid">
 
-<div class="d-flex justify-content-between align-items-center mb-4">
+    <!-- HEADER -->
+    <div class="d-flex justify-content-between align-items-center mb-4">
 
-<div>
-<h4 class="fw-bold mb-0">Data Pegawai</h4>
-<p class="text-muted mb-0">Daftar pegawai yang menggunakan tablet</p>
-</div>
+        <h4 class="fw-bold mb-0">Data Pegawai</h4>
 
-<a href="{{ route('pegawai.create') }}" class="btn btn-primary btn-sm">
-<i class="bi bi-plus-lg"></i> Tambah Pegawai
-</a>
+        <a href="{{ route('pegawai.create') }}" class="btn btn-primary btn-sm">
+            <i class="bi bi-plus-lg"></i> Tambah Pegawai
+        </a>
 
-</div>
+    </div>
 
-
-{{-- ================================
-SEARCH
-================================ --}}
-
+    <!-- SEARCH -->
 <div class="card shadow-sm border-0 mb-3">
 <div class="card-body">
 
 <form method="GET" action="{{ route('pegawai.index') }}">
 
-<div class="row align-items-center g-2">
+<div class="search-wrapper"> <!-- TAMBAHAN -->
+    <div class="search-box">
 
-<div class="col-md-4">
+        <input type="text"
+        name="search"
+        class="form-control"
+        placeholder="Cari..."
+        value="{{ request('search') }}">
 
-<div class="input-group">
+        <button class="btn btn-success btn-search">
+            <i class="bi bi-search"></i>
+        </button>
 
-<span class="input-group-text bg-white">
-<i class="bi bi-search"></i>
-</span>
+        <a href="{{ route('pegawai.index') }}"
+        class="btn btn-reset">
+            <i class="bi bi-x"></i>
+        </a>
 
-<input type="text"
-name="search"
-class="form-control"
-placeholder="Cari NIP / Nama..."
-value="{{ request('search') }}">
-
-<button class="btn btn-success btn-sm">
-Cari
-</button>
-
-</div>
-
-</div>
-
-<div class="col-md-2">
-
-<a href="{{ route('pegawai.index') }}"
-class="btn btn-secondary btn-sm">
-Reset
-</a>
-
-</div>
-
+    </div>
 </div>
 
 </form>
@@ -67,149 +47,115 @@ Reset
 </div>
 </div>
 
-
-@if(session('success'))
-
-<div class="alert alert-success alert-dismissible fade show">
-{{ session('success') }}
-
-<button type="button"
-class="btn-close"
-data-bs-dismiss="alert"></button>
-
-</div>
-
-@endif
+    <!-- SUCCESS MESSAGE -->
+    @if(session('success'))
+    <div class="alert alert-custom-success alert-dismissible fade show mb-3">
+        {{ session('success') }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    @endif
 
 
-{{-- ================================
-TABLE
-================================ --}}
+    <!-- TABLE -->
+    <div class="card shadow-sm border-0 mb-3">
+    <div class="card-body table-responsive">
 
-<div class="card shadow-sm border-0">
+    <table class="table table-bordered table-hover align-middle mb-0">
 
-<div class="card-body table-responsive">
+    <thead class="table-light text-center">
+    <tr>
+    <th width="60">No</th>
+    <th>NIP</th>
+    <th>Nama</th>
+    <th width="250">Jabatan</th>
+    <th>Unit Kerja</th>
+    <th>TMT Pensiun</th>
+    <th width="150">Aksi</th>
+    </tr>
+    </thead>
 
-<table class="table table-bordered table-hover align-middle">
+    <tbody>
+    @forelse($pegawai as $item)
+    <tr>
 
-<thead class="table-light text-center">
+    <td class="text-center">
+    {{ $pegawai->firstItem() + $loop->index }}
+    </td>
 
-<tr>
-<th width="60">No</th>
-<th>NIP</th>
-<th>Nama</th>
-<th>Jabatan</th>
-<th>Unit Kerja</th>
-<th>No HP</th>
-<th>Email</th>
-<th>TMT Pensiun</th>
-<th width="200">Aksi</th>
-</tr>
+    <td>{{ $item->nip }}</td>
 
-</thead>
+    <td>{{ $item->nama }}</td>
 
-<tbody>
+    <td>{{ $item->jabatan ?? '-' }}</td>
 
-@forelse($pegawai as $item)
+    <td>{{ $item->unit_kerja ?? '-' }}</td>
 
-<tr>
+    <td class="text-center">
+    @if($item->tmt_pensiun)
+    @php
+    $pensiun = \Carbon\Carbon::parse($item->tmt_pensiun);
+    @endphp
 
-<td class="text-center">
-{{ $pegawai->firstItem() + $loop->index }}
-</td>
+    <span class="{{ $pensiun->diffInDays(now()) <= 30 ? 'text-danger fw-semibold' : '' }}">
+    {{ $pensiun->format('d-m-Y') }}
+    </span>
+    @else
+    -
+    @endif
+    </td>
 
-<td>{{ $item->nip }}</td>
+    <td class="text-center">
 
-<td class="fw-semibold">
-{{ $item->nama }}
-</td>
+    <a href="{{ route('pegawai.show',$item->id) }}"
+    class="btn btn-detail btn-sm me-1">
+    <i class="bi bi-eye"></i>
+    </a>
 
-<td>{{ $item->jabatan ?? '-' }}</td>
+    <a href="{{ route('pegawai.edit',$item->id) }}"
+    class="btn btn-edit btn-sm me-1">
+    <i class="bi bi-pencil"></i>
+    </a>
 
-<td>{{ $item->unit_kerja ?? '-' }}</td>
+<form id="delete-form-pegawai-{{ $item->id }}"
+    action="{{ route('pegawai.destroy',$item->id) }}"
+    method="POST"
+    class="d-inline">
 
-<td>{{ $item->no_hp ?? '-' }}</td>
+    @csrf
+    @method('DELETE')
 
-<td>{{ $item->email ?? '-' }}</td>
-
-<td class="text-center">
-
-@if($item->tmt_pensiun)
-
-@php
-$pensiun = \Carbon\Carbon::parse($item->tmt_pensiun);
-@endphp
-
-<span class="{{ $pensiun->diffInDays(now()) <= 30 ? 'text-danger fw-semibold' : '' }}">
-{{ $pensiun->format('d-m-Y') }}
-</span>
-
-@else
-
--
-
-@endif
-
-</td>
-
-<td class="text-center">
-
-<a href="{{ route('pegawai.show',$item->id) }}"
-class="btn btn-info btn-sm me-1"
-title="Detail Pegawai">
-<i class="bi bi-eye"></i>
-</a>
-
-<a href="{{ route('pegawai.edit',$item->id) }}"
-class="btn btn-warning btn-sm me-1"
-title="Edit">
-<i class="bi bi-pencil"></i>
-</a>
-
-<form action="{{ route('pegawai.destroy',$item->id) }}"
-method="POST"
-class="d-inline">
-
-@csrf
-@method('DELETE')
-
-<button class="btn btn-danger btn-sm"
-onclick="return confirm('Yakin ingin menghapus pegawai ini?')"
-title="Hapus">
-
-<i class="bi bi-trash"></i>
-
-</button>
+    <button type="button"
+        class="btn btn-delete btn-sm"
+        onclick="confirmDeletePegawai({{ $item->id }})">
+        <i class="bi bi-trash"></i>
+    </button>
 
 </form>
 
-</td>
+    </td>
 
-</tr>
+    </tr>
 
-@empty
+    @empty
+    <tr>
+    <td colspan="9" class="text-center text-muted py-3">
+    Belum ada data pegawai
+    </td>
+    </tr>
+    @endforelse
+    </tbody>
 
-<tr>
-<td colspan="9" class="text-center text-muted">
-Belum ada data pegawai
-</td>
-</tr>
+    </table>
 
-@endforelse
-
-</tbody>
-
-</table>
-
-</div>
-
-</div>
+    </div>
+    </div>
 
 
-<div class="mt-3">
-{{ $pegawai->withQueryString()->links() }}
-</div>
+    <!-- PAGINATION -->
+    <div class="mt-3">
+    {{ $pegawai->withQueryString()->links() }}
+    </div>
 
-</div>
+    </div>
 
-@endsection
+    @endsection

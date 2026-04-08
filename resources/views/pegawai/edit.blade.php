@@ -3,15 +3,9 @@
 @section('content')
 
 <div class="container-fluid">
-
 <div class="d-flex justify-content-between align-items-center mb-3">
 <h4>Edit Pegawai</h4>
-
-<a href="{{ route('pegawai.index') }}" class="btn btn-secondary">
-Kembali
-</a>
 </div>
-
 
 <div class="card">
 <div class="card-body">
@@ -75,6 +69,14 @@ Kembali
        value="{{ old('unit_kerja', $pegawai->unit_kerja) }}">
 </div>
 
+<!-- Gedung -->
+<div class="col-md-6 mb-3">
+<label class="form-label">Gedung</label>
+<input type="text"
+       name="gedung"
+       class="form-control"
+       value="{{ old('gedung', $pegawai->gedung) }}">
+</div>
 
 <!-- No HP -->
 <div class="col-md-6 mb-3">
@@ -107,11 +109,18 @@ Kembali
 
 </div>
 
+<div class="mt-3 d-flex justify-content-between">
+    
+    <!-- KIRI -->
+    <a href="{{ route('pegawai.index') }}" class="btn btn-outline-secondary">
+        Kembali
+    </a>
 
-<div class="mt-3">
-<button class="btn btn-primary">
-Simpan Perubahan
-</button>
+    <!-- KANAN -->
+    <button class="btn btn-primary">
+        Simpan Perubahan
+    </button>
+
 </div>
 
 </form>

@@ -10,23 +10,23 @@ class AsetSeeder extends Seeder
     public function run(): void
     {
         Aset::create([
-            'kode_aset' => 'TAB001',
-            'nama_aset' => 'Tablet Samsung A7',
+            'kode_bmn' => '871',
+            'tipe' => 'Tablet Samsung A8',
             'merk' => 'Samsung',
-            'serial_number' => 'SN001',
-            'imei' => '356789123456789',
-            'tahun_pengadaan' => 2024,
+            'serial_number' => 'RR2T5006QHZ',
+            'imei' => '352952652338787',
+            'tahun_pengadaan' => 2022,
             'kondisi' => 'baik',
             'status' => 'tersedia'
         ]);
 
         Aset::create([
-            'kode_aset' => 'TAB002',
-            'nama_aset' => 'Tablet Samsung A8',
+            'kode_bmn' => '873',
+            'tipe' => 'Tablet Samsung A8',
             'merk' => 'Samsung',
-            'serial_number' => 'SN002',
-            'imei' => '356789123456780',
-            'tahun_pengadaan' => 2024,
+            'serial_number' => 'RR2T5006QNB',
+            'imei' => '352952652338837',
+            'tahun_pengadaan' => 2022,
             'kondisi' => 'baik',
             'status' => 'tersedia'
         ]);

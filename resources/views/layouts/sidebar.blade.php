@@ -1,12 +1,8 @@
 <div class="sidebar sidebar-default" id="sidebar">
 
     <!-- ================= HEADER ================= -->
-    <div class="sidebar-header text-center py-4 border-bottom border-secondary">
-        <div class="mb-2">
-            <i class="ri-tablet-line text-white" style="font-size: 32px;"></i>
-        </div>
-        <h5 class="text-white fw-bold mb-0">SI ASET</h5>
-        <small class="text-light">Pustekinfo</small>
+        <div class="sidebar-header">
+        <h5>SI <span>ASET</span></h5>
     </div>
 
     <!-- ================= BODY ================= -->
@@ -21,6 +17,15 @@
             </a>
         </div>
 
+        <!-- ===== DATA ASET ===== -->
+        <div class="nav-item mb-2">
+            <a href="{{ route('aset.index') }}"
+               class="nav-link d-flex align-items-center {{ request()->routeIs('aset.*') ? 'active' : '' }}">
+                <i class="ri-tablet-line me-2 fs-18"></i>
+                <span>Data Aset</span>
+            </a>
+        </div>
+
         <!-- ===== DATA PEGAWAI ===== -->
         <div class="nav-item mb-2">
             <a href="{{ route('pegawai.index') }}"
@@ -30,14 +35,6 @@
             </a>
         </div>
 
-        <!-- ===== DATA ASET ===== -->
-        <div class="nav-item mb-2">
-            <a href="{{ route('aset.index') }}"
-               class="nav-link d-flex align-items-center {{ request()->routeIs('aset.*') ? 'active' : '' }}">
-                <i class="ri-tablet-line me-2 fs-18"></i>
-                <span>Data Aset</span>
-            </a>
-        </div>
 
         <!-- ===== TRANSAKSI ASET ===== -->
         <div class="nav-item mb-2">

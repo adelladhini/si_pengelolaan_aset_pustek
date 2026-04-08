@@ -4,12 +4,12 @@ use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\Auth;
 
 use App\Http\Controllers\Auth\LoginController;
-use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\DashboardController; 
+use App\Http\Controllers\TransaksiAsetController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\AsetController;
-use App\Http\Controllers\TransaksiAsetController;
-use App\Http\Controllers\UserController;
 use App\Http\Controllers\PengaturanAkunController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -18,6 +18,9 @@ use App\Http\Controllers\PengaturanAkunController;
 */
 
 Route::get('/', function () {
+    if (auth()->check()) {
+        return redirect()->route('dashboard');
+    }
     return redirect()->route('login');
 });
 
@@ -44,59 +47,36 @@ Route::post('/logout', function () {
 
 Route::middleware(['auth'])->group(function () {
 
-    /*
-    |--------------------------------------------------------------------------
-    | DASHBOARD
-    |--------------------------------------------------------------------------
-    */
-
+    // ✅ Dashboard
     Route::get('/dashboard', [DashboardController::class, 'index'])
         ->name('dashboard');
 
-    /*
-    |--------------------------------------------------------------------------
-    | DATA MASTER
-    |--------------------------------------------------------------------------
-    */
-
+    // Pegawai
     Route::resource('pegawai', PegawaiController::class);
+
+    Route::post('/pegawai/{id}/reset', [PegawaiController::class, 'resetPassword'])
+        ->name('pegawai.reset');
+
+    // Aset
     Route::resource('aset', AsetController::class);
 
-    /*
-    |--------------------------------------------------------------------------
-    | TRANSAKSI ASET
-    |--------------------------------------------------------------------------
-    */
-
     Route::resource('transaksi-aset', TransaksiAsetController::class);
-
-    // Pengembalian tablet
-    Route::patch('/transaksi-aset/kembali/{id}', 
-        [TransaksiAsetController::class, 'kembali']
-    )->name('transaksi-aset.kembali');
-
-    /*
-    |--------------------------------------------------------------------------
-    | MANAJEMEN USER
-    |--------------------------------------------------------------------------
-    */
-
-    Route::resource('users', UserController::class);
-
-    /*
-    |--------------------------------------------------------------------------
-    | PENGATURAN AKUN
-    |--------------------------------------------------------------------------
-    */
 
     Route::get('/pengaturan-akun', [PengaturanAkunController::class, 'index'])
         ->name('pengaturan.akun');
 
     Route::post('/pengaturan-akun/update', [PengaturanAkunController::class, 'update'])
         ->name('pengaturan.akun.update');
-
-    Route::patch('/pegawai/kembalikan-tablet/{id}',
-    [PegawaiController::class,'kembalikanTablet'])
-    ->name('pegawai.kembalikanTablet');
-
 });
+
+Route::patch('/transaksi-aset/{id}/kembalikan', [TransaksiAsetController::class, 'kembalikan'])
+    ->name('transaksi-aset.kembalikan');
+
+// halaman trash
+Route::get('/aset/trash', [AsetController::class, 'trash'])->name('aset.trash');
+
+// restore data
+Route::post('/aset/restore/{id}', [AsetController::class, 'restore'])->name('aset.restore');
+
+// hapus permanen
+Route::delete('/aset/force-delete/{id}', [AsetController::class, 'forceDelete'])->name('aset.forceDelete');
