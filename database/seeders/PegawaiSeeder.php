@@ -30,5 +30,16 @@ class PegawaiSeeder extends Seeder
             'email' => 'farizaa@pustekinfo.go.id',
             'tmt_pensiun' => '2038-02-01'
         ]);
+
+        Pegawai::create([
+            'nip' => '197505132009121001',
+            'nama' => 'Wiranto Utomo, S.Si.,M.Kom. ',
+            'jabatan' => 'Pranata Komputer Ahli Muda',
+            'unit_kerja' => 'Pustekinfo',
+            'gedung' => 'Nusantara 1',
+            'no_hp' => '080000',
+            'email' => 'wiranto@pustekinfo.go.id',
+            'tmt_pensiun' => '2038-02-01'
+        ]);
     }
 }

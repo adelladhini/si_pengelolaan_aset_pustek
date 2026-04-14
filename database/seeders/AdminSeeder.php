@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 use App\Models\User;
-use Illuminate\Support\Facades\Hash; // tambahkan ini
+use Illuminate\Support\Facades\Hash; 
 
 class AdminSeeder extends Seeder
 {
@@ -13,7 +13,7 @@ class AdminSeeder extends Seeder
         User::create([
             'name' => 'Administrator',
             'username' => 'admin',
-            'email' => 'adellanurrahmadini@gmail.com',
+            'email' => 'admin@gmail.com',
             'password' => Hash::make('admin123'),
             'role_id' => 1,
             'status' => 1
