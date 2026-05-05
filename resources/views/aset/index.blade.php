@@ -191,30 +191,29 @@ class="btn btn-edit btn-sm me-1">
 </a>
 
 <form id="delete-form-aset-{{ $item->id }}"
-    action="{{ route('aset.destroy',$item->id) }}"
-    method="POST"
-    class="d-inline">
+      action="{{ route('aset.destroy',$item->id) }}"
+      method="POST"
+      class="d-inline">
 
     @csrf
     @method('DELETE')
 
     <button type="button"
-        class="btn btn-delete btn-sm"
-        onclick="confirmDeleteAset({{ $item->id }})">
+            class="btn btn-delete btn-sm"
+            onclick="confirmDelete('aset', {{ $item->id }})">
         <i class="bi bi-trash"></i>
     </button>
 
 </form>
 
 </td>
-
 </tr>
 
 @empty
 <tr>
-<td colspan="10" class="text-center text-muted py-3">
-Belum ada data aset
-</td>
+    <td colspan="10" class="text-center text-muted py-3">
+        Belum ada data aset
+    </td>
 </tr>
 @endforelse
 </tbody>
@@ -224,10 +223,9 @@ Belum ada data aset
 </div>
 </div>
 
-
 <!-- PAGINATION -->
 <div class="mt-3">
-{{ $aset->withQueryString()->links() }}
+    {{ $aset->withQueryString()->links() }}
 </div>
 
 </div>

@@ -8,7 +8,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\TransaksiAsetController;
 use App\Http\Controllers\PegawaiController;
 use App\Http\Controllers\AsetController;
-use App\Http\Controllers\PengaturanAkunController;
+use App\Http\Controllers\PengaturanAkunController; 
+use App\Http\Controllers\LaporanController;
 
 
 /*
@@ -79,4 +80,8 @@ Route::get('/aset/trash', [AsetController::class, 'trash'])->name('aset.trash');
 Route::post('/aset/restore/{id}', [AsetController::class, 'restore'])->name('aset.restore');
 
 // hapus permanen
-Route::delete('/aset/force-delete/{id}', [AsetController::class, 'forceDelete'])->name('aset.forceDelete');
+Route::delete('/aset/force-delete/{id}', [AsetController::class, 'forceDelete'])->name('aset.forceDelete');  
+
+
+Route::get('/laporan-aset', [LaporanController::class, 'index'])->name('laporan.aset');
+Route::get('/laporan-aset/export', [LaporanController::class, 'export'])->name('laporan.aset.export');

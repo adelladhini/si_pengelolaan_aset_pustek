@@ -117,45 +117,43 @@
     </a>
 
 <form id="delete-form-pegawai-{{ $item->id }}"
-    action="{{ route('pegawai.destroy',$item->id) }}"
-    method="POST"
-    class="d-inline">
+      action="{{ route('pegawai.destroy',$item->id) }}"
+      method="POST"
+      class="d-inline">
 
     @csrf
     @method('DELETE')
 
     <button type="button"
-        class="btn btn-delete btn-sm"
-        onclick="confirmDeletePegawai({{ $item->id }})">
+            class="btn btn-delete btn-sm"
+            onclick="confirmDelete('pegawai', {{ $item->id }})">
         <i class="bi bi-trash"></i>
     </button>
 
 </form>
 
-    </td>
+</td>
+</tr>
 
-    </tr>
-
-    @empty
-    <tr>
+@empty
+<tr>
     <td colspan="9" class="text-center text-muted py-3">
-    Belum ada data pegawai
+        Belum ada data pegawai
     </td>
-    </tr>
-    @endforelse
-    </tbody>
+</tr>
+@endforelse
+</tbody>
 
-    </table>
+</table>
 
-    </div>
-    </div>
+</div>
+</div>
 
-
-    <!-- PAGINATION -->
-    <div class="mt-3">
+<!-- PAGINATION -->
+<div class="mt-3">
     {{ $pegawai->withQueryString()->links() }}
-    </div>
+</div>
 
-    </div>
+</div>
 
-    @endsection
+@endsection

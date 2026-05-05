@@ -96,6 +96,7 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 
+
     /* LOAD SAVED SETTINGS */
     const savedSkin = localStorage.getItem("skin_mode");
     const savedZoom = localStorage.getItem("zoom_level");
@@ -142,52 +143,30 @@ function clearSearch() {
 
     <!-- Script Delete -->
 <script>
-function confirmDelete(id) {
+function confirmDelete(type, id) {
+
+    let titleMap = {
+        aset: 'Hapus Aset?',
+        pegawai: 'Hapus Pegawai?',
+        transaksi: 'Hapus Transaksi?'
+    };
+
+    let formPrefix = {
+        aset: 'delete-form-aset-',
+        pegawai: 'delete-form-pegawai-',
+        transaksi: 'delete-form-transaksi-'
+    };
+
     Swal.fire({
-        title: 'Hapus Aset?',
-        text: "Data tidak bisa dikembalikann!",
-        icon: 'warning',
-
-        width: '340px',
-
-        background: '#ffffff',
-        color: '#073d5f', // teks utama pakai warna gelap brand
-
-        showCancelButton: true,
-
-        confirmButtonColor: '#067788', // ✅ warna utama
-        cancelButtonColor: '#6b7280',
-
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal',
-
-        customClass: {
-            popup: 'swal-custom',
-            confirmButton: 'swal-btn-confirm',
-            cancelButton: 'swal-btn-cancel'
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('delete-form-' + id).submit();
-        }
-    })
-}
-</script>
-
-<script>
-function confirmDeletePegawai(id) {
-    Swal.fire({
-        title: 'Hapus Pegawai?',
+        title: titleMap[type],
         text: "Data tidak bisa dikembalikan!",
         icon: 'warning',
 
         width: '340px',
-
         background: '#ffffff',
         color: '#073d5f',
 
         showCancelButton: true,
-
         confirmButtonColor: '#067788',
         cancelButtonColor: '#6b7280',
 
@@ -199,77 +178,12 @@ function confirmDeletePegawai(id) {
             confirmButton: 'swal-btn-confirm',
             cancelButton: 'swal-btn-cancel'
         }
+
     }).then((result) => {
         if (result.isConfirmed) {
-            document.getElementById('delete-form-pegawai-' + id).submit();
+            document.getElementById(formPrefix[type] + id).submit();
         }
-    })
-}
-</script>
-
-<script>
-function confirmDeleteTransaksi(id) {
-    Swal.fire({
-        title: 'Hapus Transaksi?',
-        text: "Data tidak bisa dikembalikan!",
-        icon: 'warning',
-
-        width: '340px',
-
-        background: '#ffffff',
-        color: '#073d5f',
-
-        showCancelButton: true,
-
-        confirmButtonColor: '#067788',
-        cancelButtonColor: '#6b7280',
-
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal',
-
-        customClass: {
-            popup: 'swal-custom',
-            confirmButton: 'swal-btn-confirm',
-            cancelButton: 'swal-btn-cancel'
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('delete-form-transaksi-' + id).submit();
-        }
-    })
-}
-</script>
-
-<script>
-function confirmDeleteAset(id) {
-    Swal.fire({
-        title: 'Hapus Aset?',
-        text: "Data tidak bisa dikembalikan!",
-        icon: 'warning',
-
-        width: '340px',
-
-        background: '#ffffff',
-        color: '#073d5f',
-
-        showCancelButton: true,
-
-        confirmButtonColor: '#067788',
-        cancelButtonColor: '#6b7280',
-
-        confirmButtonText: 'Hapus',
-        cancelButtonText: 'Batal',
-
-        customClass: {
-            popup: 'swal-custom',
-            confirmButton: 'swal-btn-confirm',
-            cancelButton: 'swal-btn-cancel'
-        }
-    }).then((result) => {
-        if (result.isConfirmed) {
-            document.getElementById('delete-form-transaksi-' + id).submit();
-        }
-    })
+    });
 }
 </script>
 

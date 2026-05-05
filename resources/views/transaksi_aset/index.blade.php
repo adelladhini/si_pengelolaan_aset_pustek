@@ -84,45 +84,40 @@
     </button>
     @endif
 
-    <!-- DELETE -->
-    <form id="delete-form-transaksi-{{ $item->id }}"
-        action="{{ route('transaksi-aset.destroy',$item->id) }}"
-        method="POST"
-        class="d-inline">
+<!-- DELETE -->
+<form id="delete-form-transaksi-{{ $item->id }}"
+      action="{{ route('transaksi-aset.destroy',$item->id) }}"
+      method="POST"
+      class="d-inline">
 
-        @csrf
-        @method('DELETE')
+    @csrf
+    @method('DELETE')
 
-        <button type="button"
-                class="btn btn-danger btn-sm px-2 py-1"
-                onclick="confirmDeleteTransaksi({{ $item->id }})"
-                title="Hapus">
-            <i class="bi bi-trash"></i>
-        </button>
+    <button type="button"
+            class="btn btn-danger btn-sm px-2 py-1"
+            onclick="confirmDelete('transaksi', {{ $item->id }})"
+            title="Hapus">
+        <i class="bi bi-trash"></i>
+    </button>
 
-    </form>
+</form>
 
 </td>
-
 </tr>
 
 @empty
-
 <tr>
-<td colspan="7" class="text-center">
-    Belum ada transaksi
-</td>
+    <td colspan="7" class="text-center">
+        Belum ada transaksi
+    </td>
 </tr>
-
 @endforelse
 
 </tbody>
-
 </table>
 
 </div>
 </div>
-
 </div>
 
 @foreach($transaksi as $item)

@@ -153,7 +153,7 @@ class AsetController extends Controller
         $aset->delete();
 
         return redirect()->route('aset.index')
-            ->with('success','Data aset berhasil dihapus (masuk ke trash)');
+            ->with('success','Data aset berhasil dihapus');
     }
 
 
