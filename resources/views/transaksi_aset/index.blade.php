@@ -12,6 +12,38 @@
     </a>
 </div>
 
+    <!-- SEARCH -->
+<div class="card shadow-sm border-0 mb-3">
+<div class="card-body">
+
+<form method="GET" action="{{ route('transaksi-aset.index') }}">
+
+<div class="search-wrapper"> <!-- TAMBAHAN -->
+    <div class="search-box">
+
+        <input type="text"
+        name="search"
+        class="form-control"
+        placeholder="Cari..."
+        value="{{ request('search') }}">
+
+        <button class="btn btn-success btn-search">
+            <i class="bi bi-search"></i>
+        </button>
+
+        <a href="{{ route('transaksi-aset.index') }}"
+        class="btn btn-reset">
+            <i class="bi bi-x"></i>
+        </a>
+
+    </div>
+</div>
+
+</form>
+
+</div>
+</div>
+
     <!-- SUCCESS MESSAGE -->
     @if(session('success'))
     <div class="alert alert-custom-success alert-dismissible fade show mb-3">

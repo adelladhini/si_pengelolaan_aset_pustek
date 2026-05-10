@@ -47,12 +47,11 @@
 
         <!-- ===== LAPORAN ===== -->
         <div class="nav-item mb-2">
-    <a href="{{ route('laporan.aset') }}" class="nav-link d-flex align-items-center">
-        <i class="ri-file-chart-line me-2 fs-18"></i>
-        <span>Laporan Aset</span>
-    </a>
-</div>
-
+            <a href="{{ route('laporan.aset') }}"
+            class="nav-link d-flex align-items-center {{ request()->routeIs('laporan.*') ? 'active' : '' }}">
+                <i class="ri-file-chart-line me-2 fs-18"></i>
+                <span>Laporan Aset</span>
+            </a>
+        </div>
     </div>
-
 </div>

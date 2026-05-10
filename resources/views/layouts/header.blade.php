@@ -1,4 +1,4 @@
-<div class="header-main d-flex align-items-center justify-content-between px-3 px-lg-4 shadow-sm bg-white">
+<div class="header-main d-flex align-items-center justify-content-between px-3 px-lg-4 shadow-sm bg-white gap-2">
 
     <!-- ================= LEFT AREA ================= -->
     <div class="d-flex align-items-center">
@@ -12,7 +12,7 @@
         </button>
 
         <!-- TITLE DESKTOP -->
-        <h6 class="mb-0 fw-bold d-none d-sm-block">
+        <h6 class="mb-0 fw-bold d-none d-sm-block text-truncate" style="max-width:300px;">
             Sistem Informasi Pengelolaan Aset Pustekinfo
         </h6>
 
@@ -26,7 +26,7 @@
         <div class="dropdown">
 
             <a href="#" data-bs-toggle="dropdown">
-                <div class="avatar online">
+                <div class="avatar online" style="width:36px; height:36px;">
                     @if (session('informal_photo_name'))
                         <img src="https://berkas.dpr.go.id/portal/photos/{{ session('informal_photo_name') }}" 
                              alt="Foto Profil">
@@ -37,7 +37,7 @@
                 </div>
             </a>
 
-            <div class="dropdown-menu dropdown-menu-end shadow" style="width:260px;">
+            <div class="dropdown-menu dropdown-menu-end shadow" style="width:260px; max-width:90vw;">
 
                 <!-- PROFILE HEADER -->
                 <div class="p-3 text-center border-bottom">

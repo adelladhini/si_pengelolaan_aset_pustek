@@ -8,7 +8,7 @@
     <div class="d-flex justify-content-between align-items-center mb-4">
         <h4 class="mb-0">Laporan Aset</h4>
 
-        <a href="{{ route('laporan.aset.export') }}" class="btn btn-success">
+        <a href="{{ route('laporan.aset.export') }}" class="btn btn-primary">
             <i class="fas fa-file-export"></i> Export CSV
         </a>
     </div>
@@ -19,17 +19,17 @@
             <form method="GET" action="{{ route('laporan.aset') }}">
                 <div class="row">
 
-                    <div class="col-md-3">
+                    <div class="col-12 col-md-3">
                         <label>Dari Tanggal</label>
                         <input type="date" name="from" class="form-control" value="{{ request('from') }}">
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-12 col-md-3">
                         <label>Sampai Tanggal</label>
                         <input type="date" name="to" class="form-control" value="{{ request('to') }}">
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-12 col-md-3">
                         <label>Status</label>
                         <select name="status" class="form-control">
                             <option value="">Semua</option>
@@ -42,7 +42,7 @@
                         </select>
                     </div>
 
-                    <div class="col-md-3 d-flex align-items-end gap-2">
+                    <div class="col-md-3 d-flex align-items-end">
                         <button class="btn btn-primary w-100">
                             <i class="fas fa-filter"></i> Filter
                         </button>
@@ -55,8 +55,10 @@
 
     <!-- SUMMARY -->
     <div class="row mb-4">
+
+        <!-- DIPINJAM -->
         <div class="col-md-6">
-            <div class="card text-white bg-warning">
+            <div class="card card-dipinjam">
                 <div class="card-body">
                     <h6>Total Dipinjam</h6>
                     <h3>
@@ -66,8 +68,9 @@
             </div>
         </div>
 
+        <!-- DIKEMBALIKAN -->
         <div class="col-md-6">
-            <div class="card text-white bg-success">
+            <div class="card card-dikembalikan">
                 <div class="card-body">
                     <h6>Total Dikembalikan</h6>
                     <h3>
@@ -76,6 +79,7 @@
                 </div>
             </div>
         </div>
+
     </div>
 
     <!-- TABLE -->
@@ -104,15 +108,15 @@
                         <td>{{ $row->tanggal_kembali ?? '-' }}</td>
                         <td>
                             @if($row->status == 'Dipinjam')
-                                <span class="badge bg-warning text-dark">Dipinjam</span>
+                                <span class="badge badge-dipakai">Dipinjam</span>
                             @else
-                                <span class="badge bg-success">Dikembalikan</span>
+                                <span class="badge badge-tersedia">Dikembalikan</span>
                             @endif
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="6" class="text-center">
+                        <td colspan="6" class="text-center text-muted">
                             Tidak ada data laporan
                         </td>
                     </tr>

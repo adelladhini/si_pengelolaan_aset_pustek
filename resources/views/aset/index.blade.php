@@ -224,8 +224,13 @@ class="btn btn-edit btn-sm me-1">
 </div>
 
 <!-- PAGINATION -->
-<div class="mt-3">
-    {{ $aset->withQueryString()->links() }}
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <div class="text-muted small">
+        Showing {{ $aset->firstItem() }} to {{ $aset->lastItem() }} of {{ $aset->total() }} results
+    </div>
+    <div>
+        {{ $aset->withQueryString()->links('pagination::bootstrap-5') }}
+    </div>
 </div>
 
 </div>

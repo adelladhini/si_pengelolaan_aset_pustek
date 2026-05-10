@@ -10,8 +10,7 @@ return new class extends Migration
     {
         Schema::create('aset', function (Blueprint $table) {
             $table->id();
-
-            $table->string('kode_bmn', 50)->unique();
+            $table->string('kode_bmn', 50)->unique()->nullable();
             $table->string('tipe');
 
             $table->string('merk')->nullable();

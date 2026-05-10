@@ -150,10 +150,14 @@
 </div>
 
 <!-- PAGINATION -->
-<div class="mt-3">
-    {{ $pegawai->withQueryString()->links() }}
+<div class="d-flex justify-content-between align-items-center mt-3">
+    <div class="text-muted small">
+        Showing {{ $pegawai->firstItem() }} to {{ $pegawai->lastItem() }} of {{ $pegawai->total() }} results
+    </div>
+    <div>
+        {{ $pegawai->withQueryString()->links('pagination::bootstrap-5') }}
+    </div>
 </div>
-
 </div>
 
 @endsection
