@@ -33,41 +33,70 @@
                         @enderror
                     </div>
 
-                    {{-- KONDISI --}}
-                    <div class="mb-3">
-                        <label class="form-label">Kondisi Saat Dikembalikan</label>
-                        <select name="kondisi_kembali" 
-                            class="form-select @error('kondisi_kembali') is-invalid @enderror">
+            {{-- KONDISI --}}
+            <div class="mb-3">
+                <label class="form-label">Kondisi Saat Dikembalikan</label>
+                <select name="kondisi_kembali" 
+                    class="form-select @error('kondisi_kembali') is-invalid @enderror">
 
-                            <option value="">-- Pilih Kondisi --</option>
-                            <option value="Baik" {{ old('kondisi_kembali')=='Baik'?'selected':'' }}>Baik</option>
-                            <option value="Rusak Ringan" {{ old('kondisi_kembali')=='Rusak Ringan'?'selected':'' }}>Rusak Ringan</option>
-                            <option value="Rusak Berat" {{ old('kondisi_kembali')=='Rusak Berat'?'selected':'' }}>Rusak Berat</option>
-                            <option value="Hilang" {{ old('kondisi_kembali')=='Hilang'?'selected':'' }}>Hilang</option>
-                        </select>
+                    <option value="">-- Pilih Kondisi --</option>
+                    <option value="Baik" {{ old('kondisi_kembali')=='Baik'?'selected':'' }}>Baik</option>
+                    <option value="Rusak Ringan" {{ old('kondisi_kembali')=='Rusak Ringan'?'selected':'' }}>Rusak Ringan</option>
+                    <option value="Rusak Berat" {{ old('kondisi_kembali')=='Rusak Berat'?'selected':'' }}>Rusak Berat</option>
+                    <option value="Hilang" {{ old('kondisi_kembali')=='Hilang'?'selected':'' }}>Hilang</option>
+                </select>
 
-                        @error('kondisi_kembali')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
+                @error('kondisi_kembali')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
 
-                    {{-- UPLOAD --}}
-                    <div class="mb-2">
-                        <label class="form-label">Upload Bukti Pengembalian</label>
-                        <input type="file" 
-                               name="bukti_pengembalian"
-                               class="form-control @error('bukti_pengembalian') is-invalid @enderror"
-                               accept="image/*,application/pdf">
+            {{-- 🔥 ALASAN PENGEMBALIAN (TAMBAHAN) --}}
+            <div class="mb-3">
+                <label class="form-label">Alasan Pengembalian</label>
 
-                        @error('bukti_pengembalian')
-                            <small class="text-danger">{{ $message }}</small>
-                        @enderror
-                    </div>
+                <select name="alasan_pengembalian"
+                    class="form-select @error('alasan_pengembalian') is-invalid @enderror">
 
-                    <small class="text-muted">
-                        Format: JPG / PNG / PDF (max 2MB)
-                    </small>
+                    <option value="">-- Pilih Alasan --</option>
+                    <option value="Selesai digunakan" {{ old('alasan_pengembalian')=='Selesai digunakan'?'selected':'' }}>
+                        Selesai digunakan
+                    </option>
+                    <option value="Rusak" {{ old('alasan_pengembalian')=='Rusak'?'selected':'' }}>
+                        Rusak
+                    </option>
+                    <option value="Diganti perangkat baru" {{ old('alasan_pengembalian')=='Diganti perangkat baru'?'selected':'' }}>
+                        Diganti perangkat baru
+                    </option>
+                    <option value="Pensiun" {{ old('alasan_pengembalian')=='Pensiun'?'selected':'' }}>
+                        Pensiun
+                    </option>
+                    <option value="Mutasi" {{ old('alasan_pengembalian')=='Mutasi'?'selected':'' }}>
+                        Mutasi
+                    </option>
+                </select>
 
+                @error('alasan_pengembalian')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+
+            {{-- UPLOAD --}}
+            <div class="mb-2">
+                <label class="form-label">Upload Bukti Pengembalian</label>
+                <input type="file" 
+                    name="bukti_pengembalian"
+                    class="form-control @error('bukti_pengembalian') is-invalid @enderror"
+                    accept="image/*,application/pdf">
+
+                @error('bukti_pengembalian')
+                    <small class="text-danger">{{ $message }}</small>
+                @enderror
+            </div>
+
+            <small class="text-muted">
+                Format: JPG / PNG / PDF (max 2MB)
+            </small>
                 </div>
 
                 {{-- FOOTER --}}

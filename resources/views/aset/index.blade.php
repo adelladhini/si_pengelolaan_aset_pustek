@@ -16,7 +16,7 @@
 <!-- SEARCH + FILTER -->
 <div class="card shadow-sm border-0 mb-3">
 <div class="card-body">
-
+    
 <form method="GET" action="{{ route('aset.index') }}">
 
 <div class="row align-items-center g-2">
@@ -224,10 +224,7 @@ class="btn btn-edit btn-sm me-1">
 </div>
 
 <!-- PAGINATION -->
-<div class="d-flex justify-content-between align-items-center mt-3">
-    <div class="text-muted small">
-        Showing {{ $aset->firstItem() }} to {{ $aset->lastItem() }} of {{ $aset->total() }} results
-    </div>
+<div class="d-flex justify-content-end align-items-center gap-3 mt-3">
     <div>
         {{ $aset->withQueryString()->links('pagination::bootstrap-5') }}
     </div>

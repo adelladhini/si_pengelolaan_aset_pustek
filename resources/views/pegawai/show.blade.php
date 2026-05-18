@@ -72,209 +72,211 @@ PROFIL PEGAWAI
 </div>
 <div class="accordion" id="accordionPeminjaman">
 
-    {{-- ================= DIPINJAM ================= --}}
-    <div class="accordion-item shadow-sm border-0 rounded-4 mb-3">
+{{-- ================= DIPINJAM ================= --}}
+<div class="accordion-item shadow-sm border-0 rounded-4 mb-3">
 
-        <h2 class="accordion-header">
-            <button class="accordion-button fw-semibold"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#dipinjam">
-                <i class="bi bi-tablet me-2"></i> Tablet yang sedang Dipinjam
-            </button>
-        </h2>
+    <h2 class="accordion-header">
+        <button class="accordion-button fw-semibold"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#dipinjam">
+            <i class="bi bi-tablet me-2"></i> Tablet yang sedang Dipinjam
+        </button>
+    </h2>
 
-        <div id="dipinjam" class="accordion-collapse collapse show">
-            <div class="accordion-body p-3">
+    <div id="dipinjam" class="accordion-collapse collapse show">
+        <div class="accordion-body p-3">
 
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle text-sm">
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-sm">
 
-                        <thead class="table-light">
-                            <tr>
-                                <th>Kode BMN</th>
-                                <th>Nama Aset</th>
-                                <th>Tanggal Pinjam</th>
-                                <th>Tanggal Kembali</th>
-                                <th>Kondisi</th>
-                                <th>Bukti</th>
-                                <th>Status</th>
-                                <th width="150">Aksi</th>
-                            </tr>
-                        </thead>
+                    <thead class="table-light">
+                        <tr>
+                            <th>Kode BMN</th>
+                            <th>Nama Aset</th>
+                            <th>Tanggal Pinjam</th>
+                            <th>Tanggal Kembali</th>
+                            <th>Kondisi</th>
+                            <th>Bukti</th>
+                            <th>Status</th>
+                            <th width="150">Aksi</th>
+                        </tr>
+                    </thead>
 
-                        <tbody>
-                            @forelse($transaksi as $item)
-                            <tr>
+                    <tbody>
+                        @forelse($transaksi as $item)
+                        <tr>
 
-                                <td class="fw-semibold">
-                                    {{ $item->aset->kode_bmn }}
-                                </td>
+                            <td class="fw-semibold">
+                                {{ $item->aset->kode_bmn }}
+                            </td>
 
-                                <td>
-                                    {{ $item->aset->tipe }}
-                                </td>
+                            <td>
+                                {{ $item->aset->tipe }}
+                            </td>
 
-                                <td>
-                                    {{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d-m-Y') }}
-                                </td>
+                            <td>
+                                {{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d-m-Y') }}
+                            </td>
 
-                                <td>
-                                    {{ $item->tanggal_kembali 
-                                        ? \Carbon\Carbon::parse($item->tanggal_kembali)->format('d-m-Y') 
-                                        : '-' }}
-                                </td>
+                            <td>
+                                {{ $item->tanggal_kembali 
+                                    ? \Carbon\Carbon::parse($item->tanggal_kembali)->format('d-m-Y') 
+                                    : '-' }}
+                            </td>
 
-                                <td>
-                                    @if(is_null($item->tanggal_kembali))
-                                        {{ $item->kondisi_awal }}
-                                    @else
-                                        {{ $item->kondisi_kembali ?? '-' }}
-                                    @endif
-                                </td>
-
-                                {{-- BUKTI --}}
-                                <td class="text-center">
-                                    @if($item->bukti_peminjaman)
-                                        <a href="{{ asset('storage/'.$item->bukti_peminjaman) }}" 
-                                        target="_blank" 
-                                        class="btn btn-sm btn-primary px-2 py-1">
-                                            <i class="bi bi-file-earmark-arrow-up"></i>
-                                        </a>
-                                    @else
-                                        -
-                                    @endif
-                                </td>
-
-                                {{-- STATUS --}}
-                                <td class="text-center">
-                                    @if(is_null($item->tanggal_kembali))
-                                        <span class="badge-custom badge-ringan">Dipinjam</span>
-                                    @else
-                                        <span class="badge bg-success">Dikembalikan</span>
-                                    @endif
-                                </td>
-
-                                {{-- AKSI --}}
-                                <td class="text-center">
-                                    @if(is_null($item->tanggal_kembali))
-                                        <button class="btn btn-success btn-sm px-2 py-1"
-                                            data-bs-toggle="modal" 
-                                            data-bs-target="#modalKembalikan{{ $item->id }}">
-                                            <i class="ri-checkbox-circle-line"></i>
-                                        </button>
-                                    @else
-                                        <span class="badge bg-success">✔</span>
-                                    @endif
-                                </td>
-
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="8" class="text-center text-muted">
-                                    Tidak ada tablet dipinjam
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
-
-                    </table>
-                </div>
-
-            </div>
-        </div>
-    </div>
-
-
-    {{-- ================= RIWAYAT ================= --}}
-    <div class="accordion-item shadow-sm border-0 rounded-4">
-
-        <h2 class="accordion-header">
-            <button class="accordion-button collapsed fw-semibold"
-                type="button"
-                data-bs-toggle="collapse"
-                data-bs-target="#riwayat">
-                <i class="bi bi-clock-history me-2"></i> Riwayat Peminjaman
-            </button>
-        </h2>
-
-        <div id="riwayat" class="accordion-collapse collapse">
-            <div class="accordion-body p-3">
-
-                <div class="table-responsive">
-                    <table class="table table-hover align-middle text-sm">
-
-                        <thead class="table-light">
-                            <tr>
-                                <th>Kode BMN</th>
-                                <th>Nama Aset</th>
-                                <th>Tanggal Pinjam</th>
-                                <th>Tanggal Kembali</th>
-                                <th>Kondisi</th>
-                                <th>Bukti</th>
-                                <th>Status</th>
-                            </tr>
-                        </thead>
-
-                        <tbody>
-                            @forelse($riwayat as $item)
-                            <tr>
-
-                                <td class="fw-semibold">
-                                    {{ $item->aset->kode_bmn }}
-                                </td>
-
-                                <td>
-                                    {{ $item->aset->tipe }}
-                                </td>
-
-                                <td>
-                                    {{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d-m-Y') }}
-                                </td>
-
-                                <td>
-                                    {{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d-m-Y') }}
-                                </td>
-
-                                <td>
+                            <td>
+                                @if(is_null($item->tanggal_kembali))
+                                    {{ $item->kondisi_awal }}
+                                @else
                                     {{ $item->kondisi_kembali ?? '-' }}
-                                </td>
+                                @endif
+                            </td>
 
-                                {{-- BUKTI --}}
-                                <td class="text-center">
-                                    @if($item->bukti_pengembalian)
-                                        <a href="{{ asset('storage/'.$item->bukti_pengembalian) }}" 
-                                        target="_blank" 
-                                        class="btn btn-sm btn-primary px-2 py-1">
-                                            <i class="bi bi-file-earmark-check"></i>
-                                        </a>
-                                    @else
-                                        -
-                                    @endif
-                                </td>
+                            {{-- BUKTI --}}
+                            <td class="text-center">
+                                @if($item->bukti_peminjaman)
+                                    <a href="{{ asset('storage/'.$item->bukti_peminjaman) }}" 
+                                    target="_blank" 
+                                    class="btn btn-sm btn-primary px-2 py-1">
+                                        <i class="bi bi-file-earmark-arrow-up"></i>
+                                    </a>
+                                @else
+                                    -
+                                @endif
+                            </td>
 
-                                {{-- STATUS --}}
-                                <td class="text-center">
-                                    <span class="badge bg-success">Dikembalikan</span>
-                                </td>
+                            {{-- 🔥 STATUS (SUDAH SINKRON) --}}
+                            <td class="text-center">
+                                @php
+                                    $isReturned = !is_null($item->tanggal_kembali);
+                                @endphp
 
-                            </tr>
-                            @empty
-                            <tr>
-                                <td colspan="7" class="text-center text-muted">
-                                    Belum ada riwayat peminjaman
-                                </td>
-                            </tr>
-                            @endforelse
-                        </tbody>
+                                <span class="{{ $isReturned ? 'badge-custom badge-baik' : 'badge-custom badge-ringan' }}">
+                                    {{ $isReturned ? 'Dikembalikan' : 'Dipinjam' }}
+                                </span>
+                            </td>
 
-                    </table>
-                </div>
+                            {{-- AKSI --}}
+                            <td class="text-center">
+                                @if(is_null($item->tanggal_kembali))
+                                    <button class="btn btn-success btn-sm px-2 py-1"
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#modalKembalikan{{ $item->id }}">
+                                        <i class="ri-checkbox-circle-line"></i>
+                                    </button>
+                                @else
+                                    <span class="badge-custom badge-baik">✔</span>
+                                @endif
+                            </td>
 
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="8" class="text-center text-muted">
+                                Tidak ada tablet dipinjam
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+
+                </table>
             </div>
+
         </div>
     </div>
+</div>
 
+
+{{-- ================= RIWAYAT ================= --}}
+<div class="accordion-item shadow-sm border-0 rounded-4">
+
+    <h2 class="accordion-header">
+        <button class="accordion-button collapsed fw-semibold"
+            type="button"
+            data-bs-toggle="collapse"
+            data-bs-target="#riwayat">
+            <i class="bi bi-clock-history me-2"></i> Riwayat Peminjaman
+        </button>
+    </h2>
+
+    <div id="riwayat" class="accordion-collapse collapse">
+        <div class="accordion-body p-3">
+
+            <div class="table-responsive">
+                <table class="table table-hover align-middle text-sm">
+
+                    <thead class="table-light">
+                        <tr>
+                            <th>Kode BMN</th>
+                            <th>Nama Aset</th>
+                            <th>Tanggal Pinjam</th>
+                            <th>Tanggal Kembali</th>
+                            <th>Kondisi</th>
+                            <th>Bukti</th>
+                            <th>Status</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @forelse($riwayat as $item)
+                        <tr>
+
+                            <td class="fw-semibold">
+                                {{ $item->aset->kode_bmn }}
+                            </td>
+
+                            <td>
+                                {{ $item->aset->tipe }}
+                            </td>
+
+                            <td>
+                                {{ \Carbon\Carbon::parse($item->tanggal_pinjam)->format('d-m-Y') }}
+                            </td>
+
+                            <td>
+                                {{ \Carbon\Carbon::parse($item->tanggal_kembali)->format('d-m-Y') }}
+                            </td>
+
+                            <td>
+                                {{ $item->kondisi_kembali ?? '-' }}
+                            </td>
+
+                            {{-- BUKTI --}}
+                            <td class="text-center">
+                                @if($item->bukti_pengembalian)
+                                    <a href="{{ asset('storage/'.$item->bukti_pengembalian) }}" 
+                                    target="_blank" 
+                                    class="btn btn-sm btn-primary px-2 py-1">
+                                        <i class="bi bi-file-earmark-check"></i>
+                                    </a>
+                                @else
+                                    -
+                                @endif
+                            </td>
+
+                            {{-- 🔥 STATUS SINKRON --}}
+                            <td class="text-center">
+                                <span class="badge-custom badge-baik">
+                                    Dikembalikan
+                                </span>
+                            </td>
+
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="7" class="text-center text-muted">
+                                Belum ada riwayat peminjaman
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
 </div>
 
 @foreach($transaksi as $item)

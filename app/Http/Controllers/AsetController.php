@@ -43,13 +43,15 @@ class AsetController extends Controller
         }
 
         // ================= DATA =================
-        $aset = $query->orderBy('kode_bmn', 'asc')->paginate(10);
+            $aset = $query
+        ->orderByRaw('kode_bmn IS NULL, CAST(kode_bmn AS UNSIGNED) ASC')
+        ->paginate(10);
 
-        $tipeList = Aset::select('tipe')->distinct()->pluck('tipe');
-        $tahunList = Aset::select('tahun_pengadaan')->distinct()->pluck('tahun_pengadaan');
+            $tipeList = Aset::select('tipe')->distinct()->pluck('tipe');
+            $tahunList = Aset::select('tahun_pengadaan')->distinct()->pluck('tahun_pengadaan');
 
-        return view('aset.index', compact('aset', 'tipeList', 'tahunList'));
-    }
+            return view('aset.index', compact('aset', 'tipeList', 'tahunList'));
+        }
 
 
     /**

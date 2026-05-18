@@ -72,15 +72,39 @@ INFORMASI TRANSAKSI
                 </div>
             </div>
 
-            {{-- STATUS --}}
+            {{-- 🔥 ALASAN --}}
+            <div class="col-md-6">
+                <small class="text-muted">Alasan Pengembalian</small>
+                <div>
+                    @if($transaksi->alasan_pengembalian)
+                        <span class="badge bg-light text-dark px-3 py-2">
+                            {{ $transaksi->alasan_pengembalian }}
+                        </span>
+                    @else
+                        -
+                    @endif
+                </div>
+            </div>
+
+            {{-- 🔥 STATUS (SINKRON + LINK) --}}
             <div class="col-md-6">
                 <small class="text-muted">Status</small>
                 <div>
+
                     @if(is_null($transaksi->tanggal_kembali))
-                        <span class="badge-custom badge-ringan">Dipinjam</span>
+                        <a href="{{ route('transaksi-aset.index', ['status' => 'Dipinjam']) }}">
+                            <span class="badge-custom badge-ringan">
+                                Dipinjam
+                            </span>
+                        </a>
                     @else
-                        <span class="badge bg-success">Dikembalikan</span>
+                        <a href="{{ route('transaksi-aset.index', ['status' => 'Dikembalikan']) }}">
+                            <span class="badge-custom badge-baik">
+                                Dikembalikan
+                            </span>
+                        </a>
                     @endif
+
                 </div>
             </div>
 

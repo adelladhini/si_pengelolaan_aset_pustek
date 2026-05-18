@@ -16,6 +16,7 @@ return new class extends Migration
             $table->date('tanggal_kembali')->nullable();
             $table->string('kondisi_awal');
             $table->string('kondisi_kembali')->nullable();
+            $table->string('alasan_pengembalian')->nullable();
             $table->string('bukti_peminjaman')->nullable();
             $table->string('bukti_pengembalian')->nullable();
             $table->enum('status', ['dipinjam','dikembalikan'])->default('dipinjam');

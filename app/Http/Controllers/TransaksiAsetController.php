@@ -145,12 +145,15 @@ public function update(Request $request, $id)
         $request->validate([
             'tanggal_kembali' => 'required|date',
             'kondisi_kembali' => 'required',
+            'alasan_pengembalian' => 'required',
             'bukti_pengembalian' => 'required|file|mimes:jpg,jpeg,png,pdf|max:2048'
         ], [
             'tanggal_kembali.required' => 'Tanggal kembali wajib diisi!',
             'tanggal_kembali.date' => 'Format tanggal tidak valid!',
 
             'kondisi_kembali.required' => 'Kondisi wajib dipilih!',
+
+            'alasan_pengembalian.required' => 'Alasan wajib dipilih!', 
 
             'bukti_pengembalian.required' => 'Bukti pengembalian wajib diupload!',
             'bukti_pengembalian.mimes' => 'Format harus JPG, PNG, atau PDF!',
@@ -175,6 +178,7 @@ public function update(Request $request, $id)
         $transaksi->update([
             'tanggal_kembali' => $request->tanggal_kembali,
             'kondisi_kembali' => $request->kondisi_kembali,
+            'alasan_pengembalian' => $request->alasan_pengembalian,
             'status' => 'Dikembalikan'
         ]);
 

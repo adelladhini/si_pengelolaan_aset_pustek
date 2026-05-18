@@ -3,22 +3,41 @@
 @section('content')
 
 {{-- ================================ NOTIF ================================ --}}
-@if(isset($notifPensiun) && $notifPensiun->count() > 0)
-    <div class="alert alert-warning mb-4">
-        <strong>⚠ Pegawai Akan Pensiun</strong>
 
-        <ul class="mb-0 mt-2">
-            @foreach($notifPensiun as $pegawai)
-                <li>
-                    <a href="{{ route('pegawai.show', $pegawai->id) }}" class="fw-semibold text-dark">
-                        {{ $pegawai->nama }}
-                    </a>
-                    akan pensiun pada
-                    <b>{{ \Carbon\Carbon::parse($pegawai->tmt_pensiun)->format('d M Y') }}</b>
-                </li>
-            @endforeach
-        </ul>
-    </div>
+{{-- ⚠ AKAN PENSIUN --}}
+@if(isset($notifAkanPensiun) && $notifAkanPensiun->count() > 0)
+<div class="alert alert-warning mb-4">
+    <strong>⚠ Pegawai Akan Pensiun (Masih Memegang Aset)</strong>
+
+    <ul class="mb-0 mt-2">
+        @foreach($notifAkanPensiun as $pegawai)
+            <li>
+                <a href="{{ route('pegawai.show', $pegawai->id) }}" class="fw-semibold text-dark">
+                    {{ $pegawai->nama }}
+                </a>
+                akan pensiun pada
+                <b>{{ \Carbon\Carbon::parse($pegawai->tmt_pensiun)->format('d M Y') }}</b>
+            </li>
+        @endforeach
+    </ul>
+</div>
+@endif
+
+
+@if(isset($notifSudahPensiun) && $notifSudahPensiun->count() > 0)
+<div class="alert alert-danger mb-4 py-2 px-3">
+
+    🔴 <strong>{{ $notifSudahPensiun->count() }} pegawai sudah pensiun</strong>
+    dan belum mengembalikan aset —
+
+    @foreach($notifSudahPensiun as $pegawai)
+        <a href="{{ route('pegawai.show', $pegawai->id) }}" class="fw-semibold text-dark">
+            {{ $pegawai->nama }}
+        </a>
+        ({{ \Carbon\Carbon::parse($pegawai->tmt_pensiun)->format('d M Y') }})
+    @endforeach
+
+</div>
 @endif
 
 

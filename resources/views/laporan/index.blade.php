@@ -6,7 +6,7 @@
 
     <!-- TITLE -->
     <div class="d-flex justify-content-between align-items-center mb-4">
-        <h4 class="mb-0">Laporan Aset</h4>
+        <h4 class="mb-0 fw-bold">Laporan Aset</h4>
 
         <a href="{{ route('laporan.aset.export') }}" class="btn btn-primary">
             <i class="fas fa-file-export"></i> Export CSV
@@ -14,23 +14,23 @@
     </div>
 
     <!-- FILTER -->
-    <div class="card mb-4">
+    <div class="card mb-4 shadow-sm border-0">
         <div class="card-body">
             <form method="GET" action="{{ route('laporan.aset') }}">
                 <div class="row">
 
                     <div class="col-12 col-md-3">
-                        <label>Dari Tanggal</label>
+                        <label class="form-label">Dari Tanggal</label>
                         <input type="date" name="from" class="form-control" value="{{ request('from') }}">
                     </div>
 
                     <div class="col-12 col-md-3">
-                        <label>Sampai Tanggal</label>
+                        <label class="form-label">Sampai Tanggal</label>
                         <input type="date" name="to" class="form-control" value="{{ request('to') }}">
                     </div>
 
                     <div class="col-12 col-md-3">
-                        <label>Status</label>
+                        <label class="form-label">Status</label>
                         <select name="status" class="form-control">
                             <option value="">Semua</option>
                             <option value="Dipinjam" {{ request('status') == 'Dipinjam' ? 'selected' : '' }}>
@@ -58,11 +58,11 @@
 
         <!-- DIPINJAM -->
         <div class="col-md-6">
-            <div class="card card-dipinjam">
+            <div class="card shadow-sm border-0">
                 <div class="card-body">
                     <h6>Total Dipinjam</h6>
                     <h3>
-                        {{ $data->where('status','Dipinjam')->count() }}
+                        {{ $data->whereNull('tanggal_kembali')->count() }}
                     </h3>
                 </div>
             </div>
@@ -70,11 +70,11 @@
 
         <!-- DIKEMBALIKAN -->
         <div class="col-md-6">
-            <div class="card card-dikembalikan">
+            <div class="card shadow-sm border-0">
                 <div class="card-body">
                     <h6>Total Dikembalikan</h6>
                     <h3>
-                        {{ $data->where('status','Dikembalikan')->count() }}
+                        {{ $data->whereNotNull('tanggal_kembali')->count() }}
                     </h3>
                 </div>
             </div>
@@ -83,15 +83,14 @@
     </div>
 
     <!-- TABLE -->
-    <div class="card">
+    <div class="card shadow-sm border-0">
         <div class="card-body table-responsive">
 
             <table class="table table-bordered table-hover align-middle">
-                <thead class="table-light">
+                <thead class="table-light text-center">
                     <tr>
                         <th>No</th>
                         <th>Pegawai</th>
-                        <th>Aset</th>
                         <th>Tanggal Pinjam</th>
                         <th>Tanggal Kembali</th>
                         <th>Status</th>
@@ -101,18 +100,20 @@
                 <tbody>
                     @forelse($data as $i => $row)
                     <tr>
-                        <td>{{ $i+1 }}</td>
+                        <td class="text-center">{{ $i+1 }}</td>
                         <td>{{ $row->pegawai->nama ?? '-' }}</td>
-                        <td>{{ $row->aset->nama ?? '-' }}</td>
-                        <td>{{ $row->tanggal_pinjam }}</td>
-                        <td>{{ $row->tanggal_kembali ?? '-' }}</td>
-                        <td>
-                            @if($row->status == 'Dipinjam')
-                                <span class="badge badge-dipakai">Dipinjam</span>
+                        <td class="text-center">{{ $row->tanggal_pinjam }}</td>
+                        <td class="text-center">{{ $row->tanggal_kembali ?? '-' }}</td>
+
+                        <!-- STATUS (SINKRON DENGAN TRANSAKSI) -->
+                        <td class="text-center">
+                            @if(is_null($row->tanggal_kembali))
+                                <span class="badge-custom badge-ringan">Dipinjam</span>
                             @else
-                                <span class="badge badge-tersedia">Dikembalikan</span>
+                                <span class="badge-custom badge-baik">Dikembalikan</span>
                             @endif
                         </td>
+
                     </tr>
                     @empty
                     <tr>

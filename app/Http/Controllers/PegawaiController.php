@@ -12,21 +12,59 @@ class PegawaiController extends Controller
     /**
      * Tampilkan daftar pegawai
      */
-    public function index(Request $request)
-    {
-        $query = Pegawai::query();
 
-        if ($request->search) {
-            $query->where(function ($q) use ($request) {
-                $q->where('nama', 'like', '%' . $request->search . '%')
-                  ->orWhere('unit_kerja', 'like', '%' . $request->search . '%');
-            });
-        }
+public function index(Request $request)
+{
+    $query = Pegawai::query();
 
-        $pegawai = $query->orderBy('nama', 'asc')->paginate(10);
-
-        return view('pegawai.index', compact('pegawai'));
+    // 🔍 SEARCH
+    if ($request->search) {
+        $query->where(function ($q) use ($request) {
+            $q->where('nama', 'like', '%' . $request->search . '%')
+              ->orWhere('nip', 'like', '%' . $request->search . '%')
+              ->orWhere('unit_kerja', 'like', '%' . $request->search . '%');
+        });
     }
+
+    // 🔥 FILTER STATUS PENSIUN
+    if ($request->status_pensiun == 'sudah') {
+
+        $query->whereDate('tmt_pensiun', '<', now());
+
+    } elseif ($request->status_pensiun == 'akan') {
+
+        $query->whereBetween('tmt_pensiun', [
+            now(),
+            now()->addYear()
+        ]);
+
+    } elseif ($request->status_pensiun == 'belum') {
+
+        $query->whereDate('tmt_pensiun', '>', now()->addYear());
+    }
+
+    // 🔥 FILTER STATUS PEMINJAMAN
+    if ($request->status_peminjaman == 'meminjam') {
+
+        $query->whereHas('transaksiAset', function ($q) {
+            $q->whereNull('tanggal_kembali');
+        });
+
+    }
+
+    if ($request->status_peminjaman == 'tidak') {
+
+        $query->whereDoesntHave('transaksiAset', function ($q) {
+            $q->whereNull('tanggal_kembali');
+        });
+
+    }
+
+    $pegawai = $query->orderBy('nama', 'asc')
+                      ->paginate(10);
+
+    return view('pegawai.index', compact('pegawai'));
+}
 
     /**
      * Detail pegawai
@@ -35,18 +73,18 @@ class PegawaiController extends Controller
     {
         $pegawai = Pegawai::findOrFail($id);
 
-        // tablet yang masih dipinjam pegawai
+        // tablet yang masih dipinjam
         $transaksi = TransaksiAset::with('aset')
-                        ->where('pegawai_id', $id)
-                        ->whereNull('tanggal_kembali')
-                        ->get();
+            ->where('pegawai_id', $id)
+            ->whereNull('tanggal_kembali')
+            ->get();
 
-        // 🔥 TAMBAHAN: riwayat peminjaman (yang sudah dikembalikan)
+        // riwayat peminjaman
         $riwayat = TransaksiAset::with('aset')
-                        ->where('pegawai_id', $id)
-                        ->whereNotNull('tanggal_kembali')
-                        ->latest()
-                        ->get();
+            ->where('pegawai_id', $id)
+            ->whereNotNull('tanggal_kembali')
+            ->latest()
+            ->get();
 
         return view('pegawai.show', compact('pegawai', 'transaksi', 'riwayat'));
     }
@@ -60,7 +98,7 @@ class PegawaiController extends Controller
     }
 
     /**
-     * Simpan pegawai baru
+     * Simpan pegawai
      */
     public function store(Request $request)
     {
@@ -81,17 +119,16 @@ class PegawaiController extends Controller
     }
 
     /**
-     * Form edit pegawai
+     * Form edit
      */
     public function edit($id)
     {
         $pegawai = Pegawai::findOrFail($id);
-
         return view('pegawai.edit', compact('pegawai'));
     }
 
     /**
-     * Update pegawai
+     * Update
      */
     public function update(Request $request, $id)
     {
@@ -114,12 +151,11 @@ class PegawaiController extends Controller
     }
 
     /**
-     * Hapus pegawai
+     * Hapus
      */
     public function destroy($id)
     {
         $pegawai = Pegawai::findOrFail($id);
-
         $pegawai->delete();
 
         return redirect()->route('pegawai.index')
@@ -127,22 +163,19 @@ class PegawaiController extends Controller
     }
 
     /**
-     * Tandai tablet sudah dikembalikan
+     * Kembalikan tablet
      */
     public function kembalikanTablet($id)
     {
         $transaksi = TransaksiAset::findOrFail($id);
 
-        // isi tanggal kembali
         $transaksi->tanggal_kembali = now();
         $transaksi->save();
 
-        // ubah status aset menjadi tersedia
         $aset = Aset::find($transaksi->aset_id);
         $aset->status = 'Tersedia';
         $aset->save();
 
-        return redirect()->back()->with('success','Tablet berhasil dikembalikan.');
+        return redirect()->back()->with('success', 'Tablet berhasil dikembalikan.');
     }
-    
 }

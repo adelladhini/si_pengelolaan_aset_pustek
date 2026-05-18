@@ -91,43 +91,54 @@ public function index(Request $request)
         $data[] = $dataRaw[$i] ?? 0;
     }
 
+    /*
+    ==========================================
+    NOTIF PEGAWAI AKAN PENSIUN (≤ 7 hari)
+    ==========================================
+    */
+    $notifAkanPensiun = Pegawai::whereNotNull('tmt_pensiun')
+        ->whereBetween('tmt_pensiun', [now(), now()->addDays(7)])
+        ->whereHas('transaksiAset', function ($q) {
+            $q->whereNull('tanggal_kembali');
+        })
+        ->get();
 
     /*
     ==========================================
-    NOTIF PEGAWAI AKAN PENSIUN
+    NOTIF SUDAH PENSIUN (BELUM BALIKIN ASET)
     ==========================================
     */
-
-    $notifPensiun = Pegawai::whereDate('tmt_pensiun','<=', Carbon::now()->addDays(7))
-        ->whereDate('tmt_pensiun','>=', Carbon::now())
+    $notifSudahPensiun = Pegawai::whereNotNull('tmt_pensiun')
+        ->whereDate('tmt_pensiun', '<', now())
         ->whereHas('transaksiAset', function ($q) {
             $q->whereNull('tanggal_kembali');
         })
         ->get();
 
 
-    /*
-    ==========================================
-    RETURN VIEW (SATU SAJA!)
-    ==========================================
-    */
+/*
+==========================================
+RETURN VIEW (SATU SAJA!)
+==========================================
+*/
 
-    return view('dashboard.index', compact(
-        'totalPegawai',
-        'totalAset',
-        'asetTerpakai',
-        'asetBelum',
-        'asetBaik',
-        'asetRusakRingan',
-        'asetRusakBerat',
-        'asetRusak',
-        'asetHilang',
-        'pegawaiMemegangTablet',
-        'transaksiTerbaru',
-        'notifPensiun',
-        'labels',
-        'data',
-        'tahun'
-    ));
+return view('dashboard.index', compact(
+    'totalPegawai',
+    'totalAset',
+    'asetTerpakai',
+    'asetBelum',
+    'asetBaik',
+    'asetRusakRingan',
+    'asetRusakBerat',
+    'asetRusak',
+    'asetHilang',
+    'pegawaiMemegangTablet',
+    'transaksiTerbaru',
+    'notifAkanPensiun',
+    'notifSudahPensiun',
+    'labels',
+    'data',
+    'tahun'
+));
 }
 }

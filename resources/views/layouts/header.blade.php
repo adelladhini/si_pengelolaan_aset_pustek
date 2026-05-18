@@ -1,18 +1,18 @@
+<!-- ================= HEADER ================= -->
 <div class="header-main d-flex align-items-center justify-content-between px-3 px-lg-4 shadow-sm bg-white gap-2">
 
-    <!-- ================= LEFT AREA ================= -->
+    <!-- LEFT AREA -->
     <div class="d-flex align-items-center">
 
         <!-- HAMBURGER -->
         <button id="menuSidebar"
                 type="button"
-                class="btn btn-link p-0 me-3 border-0 text-dark"
-                style="box-shadow:none;">
+                class="btn btn-link p-0 me-3 border-0 text-dark">
             <i class="ri-menu-2-fill fs-20"></i>
         </button>
 
         <!-- TITLE DESKTOP -->
-        <h6 class="mb-0 fw-bold d-none d-sm-block text-truncate" style="max-width:300px;">
+        <h6 class="mb-0 fw-bold d-none d-sm-block">
             Sistem Informasi Pengelolaan Aset Pustekinfo
         </h6>
 
@@ -22,68 +22,70 @@
         </h6>
     </div>
 
-        <!-- ================= PROFILE ================= -->
-        <div class="dropdown">
+    <!-- PROFILE -->
+    <div class="dropdown">
+        <a href="#" data-bs-toggle="dropdown">
+            <div class="avatar online" style="width:36px; height:36px;">
+                @if (session('informal_photo_name'))
+                    <img src="https://berkas.dpr.go.id/portal/photos/{{ session('informal_photo_name') }}" alt="Foto Profil">
+                @else
+                    <img src="{{ asset('admin-dashbyte/dist/assets/img/user.png') }}" alt="Foto Profil">
+                @endif
+            </div>
+        </a>
 
-            <a href="#" data-bs-toggle="dropdown">
-                <div class="avatar online" style="width:36px; height:36px;">
+        <div class="dropdown-menu dropdown-menu-end shadow" style="width:260px; max-width:90vw;">
+
+            <!-- PROFILE HEADER -->
+            <div class="p-3 text-center border-bottom">
+                <div class="mb-2">
                     @if (session('informal_photo_name'))
-                        <img src="https://berkas.dpr.go.id/portal/photos/{{ session('informal_photo_name') }}" 
-                             alt="Foto Profil">
+                        <img src="https://berkas.dpr.go.id/portal/photos/{{ session('informal_photo_name') }}"
+                             class="rounded-circle" width="60">
                     @else
-                        <img src="{{ asset('admin-dashbyte/dist/assets/img/user.png') }}" 
-                             alt="Foto Profil">
+                        <img src="{{ asset('admin-dashbyte/dist/assets/img/user.png') }}"
+                             class="rounded-circle" width="60">
                     @endif
                 </div>
-            </a>
 
-            <div class="dropdown-menu dropdown-menu-end shadow" style="width:260px; max-width:90vw;">
-
-                <!-- PROFILE HEADER -->
-                <div class="p-3 text-center border-bottom">
-
-                    <div class="mb-2">
-                        @if (session('informal_photo_name'))
-                            <img src="https://berkas.dpr.go.id/portal/photos/{{ session('informal_photo_name') }}"
-                                 class="rounded-circle" width="60">
-                        @else
-                            <img src="{{ asset('admin-dashbyte/dist/assets/img/user.png') }}"
-                                 class="rounded-circle" width="60">
-                        @endif
-                    </div>
-
-                    <h6 class="mb-0 fw-semibold">
-                        {{ session('nama') ?? 'User' }}
-                    </h6>
-                    <small class="text-muted">
-                        Administrator
-                    </small>
-                </div>
-
-                <!-- MENU -->
-                <div class="list-group list-group-flush">
-
-                    <a href="{{ route('pengaturan.akun') }}" 
-                    class="list-group-item list-group-item-action">
-                        <i class="ri-user-settings-line me-2"></i>
-                        Pengaturan Akun
-                    </a>
-                    
-                    <div class="dropdown-divider"></div>
-
-                    <form action="{{ route('logout') }}" method="POST">
-                        @csrf
-                        <button type="submit"
-                                class="list-group-item list-group-item-action text-danger border-0 bg-transparent text-start w-100">
-                            <i class="ri-logout-box-r-line me-2"></i>
-                            Logout
-                        </button>
-                    </form>
-
-                </div>
-
+                <h6 class="mb-0 fw-semibold">
+                    {{ session('nama') ?? 'User' }}
+                </h6>
+                <small class="text-muted">Administrator</small>
             </div>
-        </div>
 
+            <!-- MENU -->
+            <div class="list-group list-group-flush">
+                <a href="{{ route('pengaturan.akun') }}" 
+                   class="list-group-item list-group-item-action">
+                    <i class="ri-user-settings-line me-2"></i>
+                    Pengaturan Akun
+                </a>
+
+                <div class="dropdown-divider"></div>
+
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                        class="list-group-item list-group-item-action text-danger border-0 bg-transparent text-start w-100">
+                        <i class="ri-logout-box-r-line me-2"></i>
+                        Logout
+                    </button>
+                </form>
+            </div>
+
+        </div>
     </div>
+
+</div>
+<!-- ================= END HEADER ================= -->
+
+
+<!-- 🔥 MOBILE MENU (HARUS DI LUAR HEADER) -->
+<div id="mobileMenu" class="mobile-menu">
+    <a href="{{ route('dashboard') }}">Dashboard</a>
+    <a href="{{ route('aset.index') }}">Data Aset</a>
+    <a href="{{ route('pegawai.index') }}">Data Pegawai</a>
+    <a href="{{ route('transaksi-aset.index') }}">Transaksi</a>
+    <a href="{{ route('laporan.aset') }}">Laporan</a>
 </div>
